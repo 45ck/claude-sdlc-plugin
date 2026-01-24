@@ -1,0 +1,148 @@
+/**
+ * Design System Color Tokens
+ *
+ * Color primitives and semantic tokens following a consistent naming convention.
+ * All colors are WCAG 2.1 AA compliant when used appropriately.
+ */
+
+// Blue Scale
+export const blue50 = '#eff6ff';
+export const blue100 = '#dbeafe';
+export const blue200 = '#bfdbfe';
+export const blue300 = '#93c5fd';
+export const blue400 = '#60a5fa';
+export const blue500 = '#3b82f6';
+export const blue600 = '#2563eb';
+export const blue700 = '#1d4ed8';
+export const blue800 = '#1e40af';
+export const blue900 = '#1e3a8a';
+
+// Gray Scale
+export const gray50 = '#f9fafb';
+export const gray100 = '#f3f4f6';
+export const gray200 = '#e5e7eb';
+export const gray300 = '#d1d5db';
+export const gray400 = '#9ca3af';
+export const gray500 = '#6b7280';
+export const gray600 = '#4b5563';
+export const gray700 = '#374151';
+export const gray800 = '#1f2937';
+export const gray900 = '#111827';
+
+// Red Scale
+export const red50 = '#fef2f2';
+export const red100 = '#fee2e2';
+export const red200 = '#fecaca';
+export const red300 = '#fca5a5';
+export const red400 = '#f87171';
+export const red500 = '#ef4444';
+export const red600 = '#dc2626';
+export const red700 = '#b91c1c';
+export const red800 = '#991b1b';
+export const red900 = '#7f1d1d';
+
+// Green Scale
+export const green50 = '#f0fdf4';
+export const green100 = '#dcfce7';
+export const green200 = '#bbf7d0';
+export const green300 = '#86efac';
+export const green400 = '#4ade80';
+export const green500 = '#22c55e';
+export const green600 = '#16a34a';
+export const green700 = '#15803d';
+export const green800 = '#166534';
+export const green900 = '#14532d';
+
+// Yellow Scale
+export const yellow50 = '#fefce8';
+export const yellow100 = '#fef9c3';
+export const yellow200 = '#fef08a';
+export const yellow300 = '#fde047';
+export const yellow400 = '#facc15';
+export const yellow500 = '#eab308';
+export const yellow600 = '#ca8a04';
+export const yellow700 = '#a16207';
+export const yellow800 = '#854d0e';
+export const yellow900 = '#713f12';
+
+// Semantic Tokens - Interactive
+export const interactive = {
+  primary: blue600,
+  primaryHover: blue700,
+  primaryActive: blue800,
+  primaryDisabled: blue300,
+
+  secondary: gray200,
+  secondaryHover: gray300,
+  secondaryActive: gray400,
+  secondaryDisabled: gray100,
+
+  ghost: 'transparent',
+  ghostHover: gray100,
+  ghostActive: gray200,
+};
+
+// Semantic Tokens - Danger
+export const danger = {
+  default: red600,
+  hover: red700,
+  active: red800,
+  disabled: red300,
+  subtle: red50,
+  subtleBorder: red200,
+};
+
+// Semantic Tokens - Success
+export const success = {
+  default: green600,
+  hover: green700,
+  active: green800,
+  disabled: green300,
+  subtle: green50,
+  subtleBorder: green200,
+};
+
+// Semantic Tokens - Warning
+export const warning = {
+  default: yellow500,
+  hover: yellow600,
+  active: yellow700,
+  disabled: yellow300,
+  subtle: yellow50,
+  subtleBorder: yellow200,
+};
+
+// Semantic Tokens - Text
+export const text = {
+  primary: gray900,
+  secondary: gray600,
+  tertiary: gray500,
+  disabled: gray400,
+  inverse: gray50,
+  link: blue600,
+  linkHover: blue700,
+};
+
+// Semantic Tokens - Background
+export const background = {
+  primary: '#ffffff',
+  secondary: gray50,
+  tertiary: gray100,
+  inverse: gray900,
+};
+
+// Semantic Tokens - Border
+export const border = {
+  default: gray300,
+  hover: gray400,
+  focus: blue500,
+  error: red500,
+};
+
+// Semantic Tokens - Focus Ring
+export const focusRing = {
+  color: blue500,
+  width: '2px',
+  offset: '2px',
+  style: 'solid',
+};

@@ -1,0 +1,226 @@
+/**
+ * Design System CSS Custom Properties
+ *
+ * All design tokens exported as CSS custom properties for use in stylesheets.
+ * Import this file in your application to access all design tokens.
+ */
+
+:root {
+  /* Colors - Blue Scale */
+  --color-blue-50: #eff6ff;
+  --color-blue-100: #dbeafe;
+  --color-blue-200: #bfdbfe;
+  --color-blue-300: #93c5fd;
+  --color-blue-400: #60a5fa;
+  --color-blue-500: #3b82f6;
+  --color-blue-600: #2563eb;
+  --color-blue-700: #1d4ed8;
+  --color-blue-800: #1e40af;
+  --color-blue-900: #1e3a8a;
+
+  /* Colors - Gray Scale */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  /* Colors - Red Scale */
+  --color-red-50: #fef2f2;
+  --color-red-100: #fee2e2;
+  --color-red-200: #fecaca;
+  --color-red-300: #fca5a5;
+  --color-red-400: #f87171;
+  --color-red-500: #ef4444;
+  --color-red-600: #dc2626;
+  --color-red-700: #b91c1c;
+  --color-red-800: #991b1b;
+  --color-red-900: #7f1d1d;
+
+  /* Colors - Green Scale */
+  --color-green-50: #f0fdf4;
+  --color-green-100: #dcfce7;
+  --color-green-200: #bbf7d0;
+  --color-green-300: #86efac;
+  --color-green-400: #4ade80;
+  --color-green-500: #22c55e;
+  --color-green-600: #16a34a;
+  --color-green-700: #15803d;
+  --color-green-800: #166534;
+  --color-green-900: #14532d;
+
+  /* Colors - Yellow Scale */
+  --color-yellow-50: #fefce8;
+  --color-yellow-100: #fef9c3;
+  --color-yellow-200: #fef08a;
+  --color-yellow-300: #fde047;
+  --color-yellow-400: #facc15;
+  --color-yellow-500: #eab308;
+  --color-yellow-600: #ca8a04;
+  --color-yellow-700: #a16207;
+  --color-yellow-800: #854d0e;
+  --color-yellow-900: #713f12;
+
+  /* Semantic Colors - Interactive */
+  --color-interactive-primary: var(--color-blue-600);
+  --color-interactive-primary-hover: var(--color-blue-700);
+  --color-interactive-primary-active: var(--color-blue-800);
+  --color-interactive-primary-disabled: var(--color-blue-300);
+  --color-interactive-secondary: var(--color-gray-200);
+  --color-interactive-secondary-hover: var(--color-gray-300);
+  --color-interactive-secondary-active: var(--color-gray-400);
+  --color-interactive-secondary-disabled: var(--color-gray-100);
+  --color-interactive-ghost: transparent;
+  --color-interactive-ghost-hover: var(--color-gray-100);
+  --color-interactive-ghost-active: var(--color-gray-200);
+
+  /* Semantic Colors - Danger */
+  --color-danger-default: var(--color-red-600);
+  --color-danger-hover: var(--color-red-700);
+  --color-danger-active: var(--color-red-800);
+  --color-danger-disabled: var(--color-red-300);
+  --color-danger-subtle: var(--color-red-50);
+  --color-danger-subtle-border: var(--color-red-200);
+
+  /* Semantic Colors - Success */
+  --color-success-default: var(--color-green-600);
+  --color-success-hover: var(--color-green-700);
+  --color-success-active: var(--color-green-800);
+  --color-success-disabled: var(--color-green-300);
+  --color-success-subtle: var(--color-green-50);
+  --color-success-subtle-border: var(--color-green-200);
+
+  /* Semantic Colors - Warning */
+  --color-warning-default: var(--color-yellow-500);
+  --color-warning-hover: var(--color-yellow-600);
+  --color-warning-active: var(--color-yellow-700);
+  --color-warning-disabled: var(--color-yellow-300);
+  --color-warning-subtle: var(--color-yellow-50);
+  --color-warning-subtle-border: var(--color-yellow-200);
+
+  /* Semantic Colors - Text */
+  --color-text-primary: var(--color-gray-900);
+  --color-text-secondary: var(--color-gray-600);
+  --color-text-tertiary: var(--color-gray-500);
+  --color-text-disabled: var(--color-gray-400);
+  --color-text-inverse: var(--color-gray-50);
+  --color-text-link: var(--color-blue-600);
+  --color-text-link-hover: var(--color-blue-700);
+
+  /* Semantic Colors - Background */
+  --color-background-primary: #ffffff;
+  --color-background-secondary: var(--color-gray-50);
+  --color-background-tertiary: var(--color-gray-100);
+  --color-background-inverse: var(--color-gray-900);
+
+  /* Semantic Colors - Border */
+  --color-border-default: var(--color-gray-300);
+  --color-border-hover: var(--color-gray-400);
+  --color-border-focus: var(--color-blue-500);
+  --color-border-error: var(--color-red-500);
+
+  /* Focus Ring */
+  --focus-ring-color: var(--color-blue-500);
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --focus-ring-style: solid;
+
+  /* Spacing Scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-9: 36px;
+  --space-10: 40px;
+  --space-11: 44px;
+  --space-12: 48px;
+  --space-13: 52px;
+  --space-14: 56px;
+  --space-15: 60px;
+  --space-16: 64px;
+  --space-17: 68px;
+  --space-18: 72px;
+  --space-19: 76px;
+  --space-20: 80px;
+
+  /* Semantic Spacing - Components */
+  --spacing-component-xs: var(--space-1);
+  --spacing-component-sm: var(--space-2);
+  --spacing-component-md: var(--space-3);
+  --spacing-component-lg: var(--space-4);
+  --spacing-component-xl: var(--space-6);
+
+  /* Semantic Spacing - Stack */
+  --spacing-stack-xs: var(--space-2);
+  --spacing-stack-sm: var(--space-3);
+  --spacing-stack-md: var(--space-4);
+  --spacing-stack-lg: var(--space-6);
+  --spacing-stack-xl: var(--space-8);
+  --spacing-stack-2xl: var(--space-12);
+
+  /* Typography - Font Families */
+  --font-family-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-mono: ui-monospace, "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+
+  /* Typography - Font Sizes */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+
+  /* Typography - Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Typography - Line Heights */
+  --line-height-none: 1;
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;
+
+  /* Typography - Letter Spacing */
+  --letter-spacing-tighter: -0.05em;
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+  --letter-spacing-widest: 0.1em;
+
+  /* Border Radius */
+  --radius-none: 0;
+  --radius-sm: 0.125rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}

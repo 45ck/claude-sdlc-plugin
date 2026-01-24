@@ -1,0 +1,85 @@
+/**
+ * Design System Spacing Tokens
+ *
+ * Based on a 4px grid system for consistent spacing throughout the design.
+ * Use these tokens for margins, padding, gaps, and other layout spacing.
+ */
+
+// Base unit: 4px
+const baseUnit = 4;
+
+// Spacing scale (4px increments)
+export const space1 = `${baseUnit * 1}px`; // 4px
+export const space2 = `${baseUnit * 2}px`; // 8px
+export const space3 = `${baseUnit * 3}px`; // 12px
+export const space4 = `${baseUnit * 4}px`; // 16px
+export const space5 = `${baseUnit * 5}px`; // 20px
+export const space6 = `${baseUnit * 6}px`; // 24px
+export const space7 = `${baseUnit * 7}px`; // 28px
+export const space8 = `${baseUnit * 8}px`; // 32px
+export const space9 = `${baseUnit * 9}px`; // 36px
+export const space10 = `${baseUnit * 10}px`; // 40px
+export const space11 = `${baseUnit * 11}px`; // 44px
+export const space12 = `${baseUnit * 12}px`; // 48px
+export const space13 = `${baseUnit * 13}px`; // 52px
+export const space14 = `${baseUnit * 14}px`; // 56px
+export const space15 = `${baseUnit * 15}px`; // 60px
+export const space16 = `${baseUnit * 16}px`; // 64px
+export const space17 = `${baseUnit * 17}px`; // 68px
+export const space18 = `${baseUnit * 18}px`; // 72px
+export const space19 = `${baseUnit * 19}px`; // 76px
+export const space20 = `${baseUnit * 20}px`; // 80px
+
+// Semantic spacing tokens
+export const spacing = {
+  // Component internal spacing
+  componentXs: space1,   // 4px - minimal internal padding
+  componentSm: space2,   // 8px - compact components
+  componentMd: space3,   // 12px - default component padding
+  componentLg: space4,   // 16px - comfortable component padding
+  componentXl: space6,   // 24px - spacious components
+
+  // Layout spacing
+  stackXs: space2,       // 8px - tight vertical rhythm
+  stackSm: space3,       // 12px - compact sections
+  stackMd: space4,       // 16px - default section spacing
+  stackLg: space6,       // 24px - comfortable sections
+  stackXl: space8,       // 32px - major sections
+  stack2xl: space12,     // 48px - page sections
+
+  // Inline spacing
+  inlineXs: space1,      // 4px - tight inline elements
+  inlineSm: space2,      // 8px - compact inline groups
+  inlineMd: space3,      // 12px - default inline spacing
+  inlineLg: space4,      // 16px - comfortable inline spacing
+
+  // Container spacing
+  containerSm: space4,   // 16px - mobile containers
+  containerMd: space6,   // 24px - tablet containers
+  containerLg: space8,   // 32px - desktop containers
+  containerXl: space12,  // 48px - wide containers
+};
+
+// Export all spacing tokens
+export const spacingScale = {
+  space1,
+  space2,
+  space3,
+  space4,
+  space5,
+  space6,
+  space7,
+  space8,
+  space9,
+  space10,
+  space11,
+  space12,
+  space13,
+  space14,
+  space15,
+  space16,
+  space17,
+  space18,
+  space19,
+  space20,
+};
