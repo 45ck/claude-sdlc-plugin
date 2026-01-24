@@ -1,0 +1,128 @@
+import React from 'react';
+import './PersonaCard.css';
+
+export interface PersonaCardProps {
+  persona: {
+    id: string;
+    name: string;
+    role: string;
+    quote?: string;
+    goals: string[];
+    painPoints: string[];
+    technicalExpertise?: 'novice' | 'intermediate' | 'advanced' | 'expert';
+    topTasks: Array<{
+      id: string;
+      description: string;
+      frequency: 'daily' | 'weekly' | 'monthly' | 'occasionally';
+      importance: 'critical' | 'high' | 'medium' | 'low';
+    }>;
+  };
+  onSelect?: (personaId: string) => void;
+  compact?: boolean;
+}
+
+export const PersonaCard: React.FC<PersonaCardProps> = ({
+  persona,
+  onSelect,
+  compact = false,
+}) => {
+  const expertiseColors = {
+    novice: '#FFA726',
+    intermediate: '#42A5F5',
+    advanced: '#66BB6A',
+    expert: '#AB47BC',
+  };
+
+  const expertiseColor = persona.technicalExpertise
+    ? expertiseColors[persona.technicalExpertise]
+    : '#999';
+
+  if (compact) {
+    return (
+      <div
+        className="persona-card persona-card--compact"
+        onClick={() => onSelect?.(persona.id)}
+        style={{ cursor: onSelect ? 'pointer' : 'default' }}
+      >
+        <div className="persona-card__header">
+          <div className="persona-card__avatar" style={{ background: expertiseColor }}>
+            {persona.name.charAt(0)}
+          </div>
+          <div>
+            <h4 className="persona-card__name">{persona.name}</h4>
+            <p className="persona-card__role">{persona.role}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="persona-card">
+      <div className="persona-card__header">
+        <div className="persona-card__avatar" style={{ background: expertiseColor }}>
+          {persona.name.charAt(0)}
+        </div>
+        <div>
+          <h3 className="persona-card__name">{persona.name}</h3>
+          <p className="persona-card__role">{persona.role}</p>
+          {persona.technicalExpertise && (
+            <span
+              className="persona-card__badge"
+              style={{ background: expertiseColor, color: 'white' }}
+            >
+              {persona.technicalExpertise}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {persona.quote && (
+        <blockquote className="persona-card__quote">"{persona.quote}"</blockquote>
+      )}
+
+      <div className="persona-card__section">
+        <h4>Primary Goals</h4>
+        <ul>
+          {persona.goals.slice(0, 3).map((goal, i) => (
+            <li key={i}>{goal}</li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="persona-card__section">
+        <h4>Pain Points</h4>
+        <ul>
+          {persona.painPoints.slice(0, 3).map((pain, i) => (
+            <li key={i}>{pain}</li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="persona-card__section">
+        <h4>Top Tasks</h4>
+        <div className="persona-card__tasks">
+          {persona.topTasks.slice(0, 5).map((task) => (
+            <div key={task.id} className="task-chip">
+              <span className="task-chip__description">{task.description}</span>
+              <span
+                className={`task-chip__badge task-chip__badge--${task.importance}`}
+              >
+                {task.importance}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {onSelect && (
+        <button
+          className="persona-card__action"
+          onClick={() => onSelect(persona.id)}
+        >
+          View Details →
+        </button>
+      )}
+    </div>
+  );
+};

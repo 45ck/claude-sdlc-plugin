@@ -1,0 +1,39 @@
+{
+  "$schema": "./sdlc.state.schema.json",
+  "version": "1.0.0",
+  "project": {
+    "name": "{{PROJECT_NAME}}",
+    "type": "{{PROJECT_TYPE}}",
+    "description": "{{PROJECT_DESCRIPTION}}",
+    "createdAt": "{{CREATED_AT}}",
+    "updatedAt": "{{UPDATED_AT}}"
+  },
+  "modules": {
+    "pm": {{PM_ENABLED}},
+    "ba": {{BA_ENABLED}},
+    "requirements": true,
+    "architecture": true,
+    "security": {{SECURITY_ENABLED}},
+    "quality": {{QUALITY_ENABLED}},
+    "testing": true,
+    "ux": true,
+    "database": {{DB_ENABLED}},
+    "ops": {{OPS_ENABLED}}
+  },
+  "personas": [],
+  "journeys": [],
+  "requirements": {
+    "functional": [],
+    "nonFunctional": [],
+    "traceabilityMatrix": []
+  },
+  "evaluation": {
+    "participants": [],
+    "sessions": [],
+    "findings": []
+  },
+  "metadata": {
+    "generatedBy": "sdlc-plugin",
+    "pluginVersion": "1.0.0"
+  }
+}

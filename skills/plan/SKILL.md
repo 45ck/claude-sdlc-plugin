@@ -142,7 +142,58 @@ Based on your answers, I'll generate the following SDLC modules:
 Let's continue with detailed requirements discovery...
 ```
 
+### Phase 1.5: Persona Discovery (CRITICAL - NEW!)
+
+**Goal**: Define 2-5 user personas BEFORE requirements deep-dive
+
+**Why First**: Personas ground all subsequent artifacts (requirements, journeys, evaluation)
+
+**Invocation**: Immediately invoke `ux-prototyper` subagent to create personas
+
+**Subagent Task**:
+```
+Create 2-5 user personas for this project based on the following user groups:
+{{USER_GROUPS_FROM_WIZARD}}
+
+For each persona, define:
+1. Name and role
+2. Goals (top 3)
+3. Pain points
+4. Context of use (environment, devices, constraints)
+5. Capabilities (technical expertise, domain knowledge, cognitive load, time available)
+6. Accessibility needs
+7. Top tasks (3-7 tasks with frequency and importance)
+8. Memorable quote
+
+Update docs/sdlc.state.json with personas array and generate persona documentation in docs/ux/personas/*.md
+```
+
+**Quick Persona Interview** (if needed to gather info):
+
+For EACH persona:
+- "What's their role?" → role
+- "Top 3 goals?" → goals[]
+- "Main pain points?" → painPoints[]
+- "Where/how do they work?" → context{environment, devices, constraints}
+- "Tech expertise?" (novice/intermediate/advanced/expert) → capabilities.technicalExpertise
+- "Accessibility needs?" → accessibility{}
+- "Their 3-7 most important tasks?" → topTasks[]
+- "A quote that captures their attitude?" → quote
+
+**Output**:
+- `docs/sdlc.state.json` updated with personas
+- `docs/ux/personas/<id>.md` for each persona
+- Summary: "✓ Created 3 personas: Sarah (PM), Dev (Engineer), Alex (End User)"
+
+**Validation**:
+- ✓ 2-5 personas (not 1, not 10)
+- ✓ Diverse expertise levels
+- ✓ Specific roles (not "Generic User")
+- ✓ At least one has accessibility considerations
+
 ### Phase 2: Open Questions (Requirements Discovery)
+
+**IMPORTANT**: Now that personas exist, scope questions to specific personas where relevant.
 
 Ask open-ended questions to gather detailed requirements. Use AskUserQuestion for structure, but allow free-form text responses.
 

@@ -1,0 +1,293 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SDLC State",
+  "description": "Source of truth for all SDLC planning artifacts",
+  "type": "object",
+  "required": ["version", "project", "modules", "personas"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version"
+    },
+    "project": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": ["web", "mobile", "api", "library", "enterprise", "academic"]
+        },
+        "description": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "modules": {
+      "type": "object",
+      "properties": {
+        "pm": { "type": "boolean" },
+        "ba": { "type": "boolean" },
+        "requirements": { "type": "boolean" },
+        "architecture": { "type": "boolean" },
+        "security": { "type": "boolean" },
+        "quality": { "type": "boolean" },
+        "testing": { "type": "boolean" },
+        "ux": { "type": "boolean" },
+        "database": { "type": "boolean" },
+        "ops": { "type": "boolean" }
+      }
+    },
+    "personas": {
+      "type": "array",
+      "description": "User personas (source of truth)",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "role", "goals"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier (kebab-case)"
+          },
+          "name": {
+            "type": "string",
+            "description": "Persona name (e.g., 'Sarah Chen')"
+          },
+          "role": {
+            "type": "string",
+            "description": "Role/archetype (e.g., 'Project Manager')"
+          },
+          "demographics": {
+            "type": "object",
+            "properties": {
+              "age": { "type": "string" },
+              "location": { "type": "string" },
+              "experience": { "type": "string" }
+            }
+          },
+          "goals": {
+            "type": "array",
+            "description": "Primary goals (top outcomes they want)",
+            "items": { "type": "string" },
+            "minItems": 1
+          },
+          "context": {
+            "type": "object",
+            "description": "Context of use",
+            "properties": {
+              "environment": { "type": "string" },
+              "devices": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "constraints": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          },
+          "painPoints": {
+            "type": "array",
+            "description": "Current pain points and fears",
+            "items": { "type": "string" }
+          },
+          "capabilities": {
+            "type": "object",
+            "description": "Capabilities and limitations",
+            "properties": {
+              "technicalExpertise": {
+                "type": "string",
+                "enum": ["novice", "intermediate", "advanced", "expert"]
+              },
+              "domainKnowledge": { "type": "string" },
+              "cognitiveLoad": { "type": "string" },
+              "timeAvailable": { "type": "string" }
+            }
+          },
+          "accessibility": {
+            "type": "object",
+            "description": "Accessibility and inclusion considerations",
+            "properties": {
+              "visualNeeds": { "type": "string" },
+              "auditoryNeeds": { "type": "string" },
+              "motorNeeds": { "type": "string" },
+              "cognitiveNeeds": { "type": "string" },
+              "assistiveTech": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          },
+          "topTasks": {
+            "type": "array",
+            "description": "Top 3-7 tasks they perform",
+            "items": {
+              "type": "object",
+              "required": ["id", "description", "frequency"],
+              "properties": {
+                "id": { "type": "string" },
+                "description": { "type": "string" },
+                "frequency": {
+                  "type": "string",
+                  "enum": ["daily", "weekly", "monthly", "occasionally"]
+                },
+                "importance": {
+                  "type": "string",
+                  "enum": ["critical", "high", "medium", "low"]
+                }
+              }
+            },
+            "minItems": 3,
+            "maxItems": 7
+          },
+          "quote": {
+            "type": "string",
+            "description": "Memorable quote capturing their attitude"
+          }
+        }
+      }
+    },
+    "journeys": {
+      "type": "array",
+      "description": "User journeys (persona-scoped)",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "personaId", "scenario", "steps"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "personaId": {
+            "type": "string",
+            "description": "References persona.id"
+          },
+          "scenario": { "type": "string" },
+          "successCriteria": {
+            "type": "array",
+            "description": "Measurable success criteria",
+            "items": { "type": "string" }
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "step": { "type": "number" },
+                "action": { "type": "string" },
+                "expected": { "type": "string" },
+                "touchpoint": { "type": "string" },
+                "emotion": {
+                  "type": "string",
+                  "enum": ["frustrated", "neutral", "satisfied", "delighted"]
+                },
+                "issues": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "requirements": {
+      "type": "object",
+      "properties": {
+        "functional": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "description": { "type": "string" },
+              "personaIds": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "priority": { "type": "string" }
+            }
+          }
+        },
+        "nonFunctional": { "type": "array" },
+        "traceabilityMatrix": {
+          "type": "array",
+          "description": "Requirement → Design → Test linkages",
+          "items": {
+            "type": "object",
+            "properties": {
+              "requirementId": { "type": "string" },
+              "designArtifact": { "type": "string" },
+              "testCase": { "type": "string" },
+              "status": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "evaluation": {
+      "type": "object",
+      "description": "Evaluation planning and results",
+      "properties": {
+        "participants": {
+          "type": "array",
+          "description": "Selected evaluation participants",
+          "items": {
+            "type": "object",
+            "required": ["personaId", "count", "selectionCriteria"],
+            "properties": {
+              "personaId": { "type": "string" },
+              "count": { "type": "number" },
+              "selectionCriteria": { "type": "string" },
+              "recruitmentStatus": { "type": "string" },
+              "consentObtained": { "type": "boolean" }
+            }
+          }
+        },
+        "sessions": {
+          "type": "array",
+          "description": "Evaluation sessions conducted",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "date": { "type": "string", "format": "date-time" },
+              "personaId": { "type": "string" },
+              "journeyId": { "type": "string" },
+              "method": {
+                "type": "string",
+                "enum": ["walkthrough", "usability-test", "heuristic", "cognitive-walkthrough"]
+              },
+              "participants": { "type": "array" },
+              "findings": { "type": "array" }
+            }
+          }
+        },
+        "findings": {
+          "type": "array",
+          "description": "Evaluation findings (issues, improvements)",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "sessionId": { "type": "string" },
+              "severity": {
+                "type": "string",
+                "enum": ["critical", "major", "minor", "enhancement"]
+              },
+              "description": { "type": "string" },
+              "affectedPersonas": { "type": "array" },
+              "status": { "type": "string" },
+              "resolution": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "generatedBy": { "type": "string" },
+        "pluginVersion": { "type": "string" }
+      }
+    }
+  }
+}
