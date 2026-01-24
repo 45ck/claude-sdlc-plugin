@@ -1,0 +1,25 @@
+{
+  "name": "{{PROJECT_NAME}}",
+  "version": "0.1.0",
+  "private": true,
+  "description": "{{PROJECT_DESCRIPTION}}",
+  "packageManager": "pnpm@latest",
+  "scripts": {
+    "dev:storybook": "pnpm --filter planning-hub storybook",
+    "build:storybook": "pnpm --filter planning-hub build",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,mdx,yaml,yml}\"",
+    "validate": "pnpm --filter planning-hub validate:openapi",
+    "sync:artifacts": "pnpm --filter planning-hub sync:artifacts",
+    "sync:artifacts:watch": "pnpm --filter planning-hub sync:artifacts:watch"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.0",
+    "prettier-plugin-organize-imports": "^4.1.0"
+  },
+  "keywords": [
+    "sdlc",
+    "planning",
+    "documentation",
+    "storybook"
+  ]
+}

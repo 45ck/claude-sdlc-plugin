@@ -1,0 +1,13 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="{{CATEGORY}}/{{TITLE}}" />
+
+# {{TITLE}}
+
+{{CONTENT}}
+
+---
+
+**Status**: {{STATUS}}
+**Last Updated**: {{DATE}}
+**Owner**: {{OWNER}}
