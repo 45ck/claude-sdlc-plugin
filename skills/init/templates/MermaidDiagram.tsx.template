@@ -1,0 +1,151 @@
+import React from 'react';
+import Mermaid from 'mdx-mermaid';
+
+/**
+ * MermaidDiagram Component
+ *
+ * Renders Mermaid diagrams in Storybook with configurable theming and error handling.
+ *
+ * @example
+ * ```tsx
+ * <MermaidDiagram
+ *   title="System Architecture"
+ *   chart={`
+ *     graph TD
+ *       A[Client] --> B[API]
+ *       B --> C[Database]
+ *   `}
+ * />
+ * ```
+ */
+
+export interface MermaidDiagramProps {
+  /** The Mermaid chart definition (supports all Mermaid syntax) */
+  chart: string;
+
+  /** Optional title displayed above the diagram */
+  title?: string;
+
+  /** Optional Mermaid configuration overrides */
+  config?: {
+    theme?: 'default' | 'dark' | 'forest' | 'neutral';
+    themeVariables?: Record<string, string>;
+    flowchart?: {
+      curve?: 'basis' | 'linear' | 'stepAfter' | 'stepBefore';
+      padding?: number;
+    };
+    sequence?: {
+      diagramMarginX?: number;
+      diagramMarginY?: number;
+      boxTextMargin?: number;
+    };
+  };
+}
+
+const defaultConfig = {
+  theme: 'default' as const,
+  themeVariables: {
+    primaryColor: '#1E88E5',
+    primaryTextColor: '#fff',
+    primaryBorderColor: '#1565C0',
+    lineColor: '#757575',
+    secondaryColor: '#E3F2FD',
+    tertiaryColor: '#fff',
+  },
+  flowchart: {
+    curve: 'basis' as const,
+    padding: 20,
+  },
+};
+
+export const MermaidDiagram: React.FC<MermaidDiagramProps> = ({
+  chart,
+  title,
+  config = {},
+}) => {
+  const [error, setError] = React.useState<string | null>(null);
+
+  const mergedConfig = {
+    ...defaultConfig,
+    ...config,
+    themeVariables: {
+      ...defaultConfig.themeVariables,
+      ...(config.themeVariables || {}),
+    },
+  };
+
+  React.useEffect(() => {
+    // Reset error when chart changes
+    setError(null);
+  }, [chart]);
+
+  const handleError = (err: Error) => {
+    console.error('Mermaid diagram error:', err);
+    setError(err.message);
+  };
+
+  return (
+    <div className="mermaid-diagram-container">
+      {title && (
+        <h3 style={{
+          marginBottom: '1rem',
+          fontSize: '1.25rem',
+          fontWeight: 600,
+          color: '#172B4D'
+        }}>
+          {title}
+        </h3>
+      )}
+
+      {error ? (
+        <div style={{
+          padding: '1rem',
+          backgroundColor: '#FFEBEE',
+          border: '1px solid #EF5350',
+          borderRadius: '4px',
+          color: '#C62828',
+        }}>
+          <strong>Diagram Error:</strong>
+          <pre style={{
+            marginTop: '0.5rem',
+            fontSize: '0.875rem',
+            whiteSpace: 'pre-wrap',
+          }}>
+            {error}
+          </pre>
+        </div>
+      ) : (
+        <div style={{
+          padding: '1rem',
+          backgroundColor: '#FAFAFA',
+          borderRadius: '4px',
+          border: '1px solid #E0E0E0',
+        }}>
+          <Mermaid
+            chart={chart}
+            config={mergedConfig}
+            onError={handleError}
+          />
+        </div>
+      )}
+
+      <style>{`
+        .mermaid-diagram-container {
+          margin: 1.5rem 0;
+        }
+
+        .mermaid-diagram-container .mermaid {
+          display: flex;
+          justify-content: center;
+        }
+
+        .mermaid-diagram-container svg {
+          max-width: 100%;
+          height: auto;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default MermaidDiagram;

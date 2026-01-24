@@ -1,0 +1,232 @@
+import React from 'react';
+import SwaggerUI from 'swagger-ui-react';
+import 'swagger-ui-react/swagger-ui.css';
+import yaml from 'js-yaml';
+
+/**
+ * SwaggerViewer Component
+ *
+ * Renders OpenAPI/Swagger specifications in Storybook with interactive documentation.
+ * Supports both URL-based and inline spec definitions in YAML or JSON format.
+ *
+ * @example
+ * ```tsx
+ * // From URL
+ * <SwaggerViewer specUrl="/artifacts/arch/api-spec.yaml" />
+ *
+ * // Inline YAML
+ * <SwaggerViewer spec={`
+ *   openapi: 3.0.0
+ *   info:
+ *     title: My API
+ *     version: 1.0.0
+ *   paths:
+ *     /users:
+ *       get:
+ *         summary: List users
+ * `} />
+ * ```
+ */
+
+export interface SwaggerViewerProps {
+  /** URL to OpenAPI spec file (YAML or JSON) */
+  specUrl?: string;
+
+  /** Inline OpenAPI spec as string (YAML or JSON) or object */
+  spec?: string | object;
+
+  /** Display options */
+  options?: {
+    /** Show only a specific set of operations by tag */
+    filter?: string | boolean;
+
+    /** Enable deep linking */
+    deepLinking?: boolean;
+
+    /** Show request duration in "Try it out" */
+    displayRequestDuration?: boolean;
+
+    /** Enable syntax highlighting */
+    syntaxHighlight?: boolean | { activated?: boolean; theme?: string };
+  };
+}
+
+const defaultOptions = {
+  deepLinking: true,
+  displayRequestDuration: true,
+  syntaxHighlight: {
+    activated: true,
+    theme: 'monokai',
+  },
+  tryItOutEnabled: true,
+  persistAuthorization: true,
+};
+
+export const SwaggerViewer: React.FC<SwaggerViewerProps> = ({
+  specUrl,
+  spec,
+  options = {},
+}) => {
+  const [specObject, setSpecObject] = React.useState<object | null>(null);
+  const [error, setError] = React.useState<string | null>(null);
+  const [loading, setLoading] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    async function loadSpec() {
+      setError(null);
+      setLoading(true);
+
+      try {
+        if (specUrl) {
+          // Load from URL
+          const response = await fetch(specUrl);
+          if (!response.ok) {
+            throw new Error(`Failed to fetch spec: ${response.statusText}`);
+          }
+
+          const contentType = response.headers.get('content-type') || '';
+          const text = await response.text();
+
+          let parsed: object;
+          if (contentType.includes('yaml') || specUrl.endsWith('.yaml') || specUrl.endsWith('.yml')) {
+            parsed = yaml.load(text) as object;
+          } else {
+            parsed = JSON.parse(text);
+          }
+
+          setSpecObject(parsed);
+        } else if (spec) {
+          // Parse inline spec
+          if (typeof spec === 'string') {
+            // Try YAML first, fallback to JSON
+            try {
+              const parsed = yaml.load(spec) as object;
+              setSpecObject(parsed);
+            } catch (yamlError) {
+              // Try JSON
+              const parsed = JSON.parse(spec);
+              setSpecObject(parsed);
+            }
+          } else {
+            // Already an object
+            setSpecObject(spec);
+          }
+        } else {
+          throw new Error('Either specUrl or spec must be provided');
+        }
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : String(err);
+        console.error('SwaggerViewer error:', errorMessage);
+        setError(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadSpec();
+  }, [specUrl, spec]);
+
+  if (loading) {
+    return (
+      <div style={{
+        padding: '2rem',
+        textAlign: 'center',
+        color: '#757575',
+      }}>
+        <div style={{ marginBottom: '0.5rem' }}>Loading API specification...</div>
+        <div style={{
+          display: 'inline-block',
+          width: '2rem',
+          height: '2rem',
+          border: '3px solid #E0E0E0',
+          borderTopColor: '#1E88E5',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite',
+        }} />
+        <style>{`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={{
+        padding: '1rem',
+        backgroundColor: '#FFEBEE',
+        border: '1px solid #EF5350',
+        borderRadius: '4px',
+        color: '#C62828',
+        margin: '1rem 0',
+      }}>
+        <strong>API Specification Error:</strong>
+        <pre style={{
+          marginTop: '0.5rem',
+          fontSize: '0.875rem',
+          whiteSpace: 'pre-wrap',
+        }}>
+          {error}
+        </pre>
+        {specUrl && (
+          <div style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>
+            Attempted to load from: <code>{specUrl}</code>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (!specObject) {
+    return null;
+  }
+
+  const mergedOptions = {
+    ...defaultOptions,
+    ...options,
+  };
+
+  return (
+    <div className="swagger-viewer-container">
+      <SwaggerUI
+        spec={specObject}
+        {...mergedOptions}
+      />
+
+      <style>{`
+        .swagger-viewer-container {
+          margin: 1.5rem 0;
+        }
+
+        /* Override Swagger UI styles to match Storybook theme */
+        .swagger-viewer-container .swagger-ui {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .swagger-viewer-container .swagger-ui .info .title {
+          color: #172B4D;
+        }
+
+        .swagger-viewer-container .swagger-ui .scheme-container {
+          background: #FAFAFA;
+          border-radius: 4px;
+          padding: 1rem;
+        }
+
+        .swagger-viewer-container .swagger-ui .opblock .opblock-summary {
+          border-radius: 4px;
+        }
+
+        .swagger-viewer-container .swagger-ui .opblock-tag {
+          border-bottom: 1px solid #E0E0E0;
+          color: #172B4D;
+          font-weight: 600;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default SwaggerViewer;

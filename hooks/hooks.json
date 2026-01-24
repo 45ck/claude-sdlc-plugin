@@ -1,0 +1,19 @@
+{
+  "PostToolUse": [
+    {
+      "matcher": "Write|Edit",
+      "script": "${CLAUDE_PLUGIN_ROOT}/scripts/format.sh"
+    }
+  ],
+  "PreToolUse": [
+    {
+      "matcher": "Write|Edit",
+      "script": "${CLAUDE_PLUGIN_ROOT}/scripts/validate-openapi.sh"
+    }
+  ],
+  "SessionStart": [
+    {
+      "script": "${CLAUDE_PLUGIN_ROOT}/scripts/helpers/check-pnpm.sh"
+    }
+  ]
+}

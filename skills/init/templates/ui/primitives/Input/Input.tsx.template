@@ -1,0 +1,145 @@
+import React from 'react';
+import './Input.css';
+
+export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
+  /**
+   * The size of the input
+   */
+  size?: 'sm' | 'md' | 'lg';
+
+  /**
+   * Whether the input is in an error state
+   */
+  error?: boolean;
+
+  /**
+   * Whether the input should take up the full width of its container
+   */
+  fullWidth?: boolean;
+
+  /**
+   * Label text for the input
+   */
+  label?: string;
+
+  /**
+   * Helper text displayed below the input
+   */
+  helperText?: string;
+
+  /**
+   * Error message displayed when error is true
+   */
+  errorMessage?: string;
+
+  /**
+   * Optional prefix element (icon, text, etc.)
+   */
+  prefix?: React.ReactNode;
+
+  /**
+   * Optional suffix element (icon, text, etc.)
+   */
+  suffix?: React.ReactNode;
+}
+
+/**
+ * Input component with label, helper text, error states, and prefix/suffix support.
+ * Fully accessible with WCAG 2.1 AA compliance.
+ */
+export const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  (
+    {
+      size = 'md',
+      error = false,
+      fullWidth = false,
+      label,
+      helperText,
+      errorMessage,
+      prefix,
+      suffix,
+      disabled = false,
+      required = false,
+      className = '',
+      id,
+      ...props
+    },
+    ref
+  ) => {
+    const inputId = id || React.useId();
+    const helperTextId = `${inputId}-helper`;
+    const errorId = `${inputId}-error`;
+
+    const wrapperClassNames = [
+      'input-wrapper',
+      fullWidth && 'input-wrapper--full-width',
+      className,
+    ]
+      .filter(Boolean)
+      .join(' ');
+
+    const containerClassNames = [
+      'input-container',
+      `input-container--${size}`,
+      error && 'input-container--error',
+      disabled && 'input-container--disabled',
+      prefix && 'input-container--has-prefix',
+      suffix && 'input-container--has-suffix',
+    ]
+      .filter(Boolean)
+      .join(' ');
+
+    const inputClassNames = ['input', `input--${size}`].filter(Boolean).join(' ');
+
+    return (
+      <div className={wrapperClassNames}>
+        {label && (
+          <label htmlFor={inputId} className="input-label">
+            {label}
+            {required && <span className="input-label__required" aria-label="required"> *</span>}
+          </label>
+        )}
+        <div className={containerClassNames}>
+          {prefix && (
+            <span className="input-prefix" aria-hidden="true">
+              {prefix}
+            </span>
+          )}
+          <input
+            ref={ref}
+            id={inputId}
+            className={inputClassNames}
+            disabled={disabled}
+            required={required}
+            aria-invalid={error}
+            aria-describedby={
+              error && errorMessage
+                ? errorId
+                : helperText
+                ? helperTextId
+                : undefined
+            }
+            {...props}
+          />
+          {suffix && (
+            <span className="input-suffix" aria-hidden="true">
+              {suffix}
+            </span>
+          )}
+        </div>
+        {error && errorMessage && (
+          <p id={errorId} className="input-error" role="alert">
+            {errorMessage}
+          </p>
+        )}
+        {!error && helperText && (
+          <p id={helperTextId} className="input-helper">
+            {helperText}
+          </p>
+        )}
+      </div>
+    );
+  }
+);
+
+Input.displayName = 'Input';

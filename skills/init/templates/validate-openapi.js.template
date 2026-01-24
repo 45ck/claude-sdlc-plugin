@@ -1,0 +1,350 @@
+#!/usr/bin/env node
+
+/**
+ * OpenAPI Specification Validator
+ *
+ * Validates all OpenAPI/Swagger specification files in the artifacts directory.
+ * Checks for syntax errors, schema compliance, and common issues.
+ *
+ * Usage:
+ *   node validate-openapi.js [path-to-spec]
+ *   node validate-openapi.js              # Validates all specs in public/artifacts/
+ */
+
+import fs from 'fs-extra';
+import path from 'path';
+import yaml from 'js-yaml';
+import { fileURLToPath } from 'url';
+import { glob } from 'glob';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const ARTIFACTS_DIR = path.resolve(__dirname, '../public/artifacts');
+
+/**
+ * Color codes for terminal output
+ */
+const colors = {
+  reset: '\x1b[0m',
+  red: '\x1b[31m',
+  green: '\x1b[32m',
+  yellow: '\x1b[33m',
+  blue: '\x1b[34m',
+  gray: '\x1b[90m',
+};
+
+/**
+ * Validate OpenAPI specification structure
+ */
+function validateOpenAPISpec(spec, filepath) {
+  const errors = [];
+  const warnings = [];
+
+  // Check for required fields based on OpenAPI version
+  const version = spec.openapi || spec.swagger;
+
+  if (!version) {
+    errors.push('Missing OpenAPI or Swagger version field');
+    return { errors, warnings, valid: false };
+  }
+
+  const isOpenAPI3 = version.startsWith('3.');
+  const isSwagger2 = version.startsWith('2.');
+
+  if (!isOpenAPI3 && !isSwagger2) {
+    errors.push(`Unsupported specification version: ${version}`);
+    return { errors, warnings, valid: false };
+  }
+
+  // Check info object
+  if (!spec.info) {
+    errors.push('Missing required "info" object');
+  } else {
+    if (!spec.info.title) {
+      errors.push('Missing required "info.title" field');
+    }
+    if (!spec.info.version) {
+      errors.push('Missing required "info.version" field');
+    }
+    if (!spec.info.description) {
+      warnings.push('Missing recommended "info.description" field');
+    }
+  }
+
+  // Check paths
+  if (!spec.paths || Object.keys(spec.paths).length === 0) {
+    warnings.push('No paths defined in specification');
+  } else {
+    // Validate path structure
+    for (const [pathKey, pathItem] of Object.entries(spec.paths)) {
+      if (!pathKey.startsWith('/')) {
+        errors.push(`Path "${pathKey}" must start with /`);
+      }
+
+      // Check for at least one operation
+      const operations = ['get', 'post', 'put', 'delete', 'patch', 'options', 'head'];
+      const hasOperation = operations.some(op => pathItem[op]);
+
+      if (!hasOperation && !pathItem.$ref) {
+        warnings.push(`Path "${pathKey}" has no operations defined`);
+      }
+
+      // Validate each operation
+      for (const operation of operations) {
+        if (pathItem[operation]) {
+          const op = pathItem[operation];
+
+          if (!op.responses) {
+            errors.push(`Operation ${operation.toUpperCase()} ${pathKey} missing "responses"`);
+          }
+
+          if (!op.summary && !op.description) {
+            warnings.push(`Operation ${operation.toUpperCase()} ${pathKey} missing summary/description`);
+          }
+
+          if (!op.operationId) {
+            warnings.push(`Operation ${operation.toUpperCase()} ${pathKey} missing operationId`);
+          }
+        }
+      }
+    }
+  }
+
+  // OpenAPI 3.x specific checks
+  if (isOpenAPI3) {
+    if (!spec.servers || spec.servers.length === 0) {
+      warnings.push('No servers defined (recommended for OpenAPI 3.x)');
+    }
+
+    // Check components
+    if (spec.components) {
+      if (spec.components.schemas && Object.keys(spec.components.schemas).length === 0) {
+        warnings.push('Empty components.schemas object');
+      }
+    }
+  }
+
+  // Swagger 2.x specific checks
+  if (isSwagger2) {
+    if (!spec.host) {
+      warnings.push('Missing "host" field (recommended for Swagger 2.0)');
+    }
+
+    if (!spec.basePath) {
+      warnings.push('Missing "basePath" field (recommended for Swagger 2.0)');
+    }
+
+    // Check definitions
+    if (spec.definitions && Object.keys(spec.definitions).length === 0) {
+      warnings.push('Empty definitions object');
+    }
+  }
+
+  // Security considerations
+  if (!spec.security && !spec.securityDefinitions && !spec.components?.securitySchemes) {
+    warnings.push('No security schemes defined');
+  }
+
+  const valid = errors.length === 0;
+  return { errors, warnings, valid };
+}
+
+/**
+ * Load and parse a spec file
+ */
+async function loadSpec(filepath) {
+  try {
+    const content = await fs.readFile(filepath, 'utf-8');
+    const ext = path.extname(filepath).toLowerCase();
+
+    let spec;
+    if (ext === '.yaml' || ext === '.yml') {
+      spec = yaml.load(content);
+    } else if (ext === '.json') {
+      spec = JSON.parse(content);
+    } else {
+      throw new Error(`Unsupported file extension: ${ext}`);
+    }
+
+    return { spec, error: null };
+  } catch (error) {
+    return { spec: null, error: error.message };
+  }
+}
+
+/**
+ * Find all OpenAPI spec files
+ */
+async function findSpecFiles(startPath) {
+  const patterns = [
+    '**/*openapi*.{yaml,yml,json}',
+    '**/*swagger*.{yaml,yml,json}',
+    '**/api-spec*.{yaml,yml,json}',
+    '**/api.{yaml,yml,json}',
+  ];
+
+  const files = new Set();
+
+  for (const pattern of patterns) {
+    const matches = await glob(pattern, {
+      cwd: startPath,
+      absolute: true,
+      nodir: true,
+      ignore: ['**/node_modules/**', '**/.git/**'],
+    });
+
+    matches.forEach(file => files.add(file));
+  }
+
+  return Array.from(files);
+}
+
+/**
+ * Format validation results
+ */
+function formatResults(filepath, result) {
+  const relativePath = path.relative(ARTIFACTS_DIR, filepath);
+
+  console.log(`\n${'='.repeat(60)}`);
+  console.log(`${colors.blue}Validating:${colors.reset} ${relativePath}`);
+  console.log('='.repeat(60));
+
+  if (result.parseError) {
+    console.log(`${colors.red}✗ Parse Error${colors.reset}`);
+    console.log(`  ${result.parseError}`);
+    return false;
+  }
+
+  const { errors, warnings, valid } = result.validation;
+
+  if (valid) {
+    console.log(`${colors.green}✓ Valid OpenAPI specification${colors.reset}`);
+  } else {
+    console.log(`${colors.red}✗ Invalid OpenAPI specification${colors.reset}`);
+  }
+
+  if (errors.length > 0) {
+    console.log(`\n${colors.red}Errors:${colors.reset}`);
+    errors.forEach(err => {
+      console.log(`  ${colors.red}•${colors.reset} ${err}`);
+    });
+  }
+
+  if (warnings.length > 0) {
+    console.log(`\n${colors.yellow}Warnings:${colors.reset}`);
+    warnings.forEach(warn => {
+      console.log(`  ${colors.yellow}•${colors.reset} ${warn}`);
+    });
+  }
+
+  if (valid && warnings.length === 0) {
+    console.log(`${colors.gray}No issues found${colors.reset}`);
+  }
+
+  return valid;
+}
+
+/**
+ * Validate a single spec file
+ */
+async function validateSpec(filepath) {
+  const { spec, error } = await loadSpec(filepath);
+
+  if (error) {
+    return {
+      parseError: error,
+      validation: null,
+    };
+  }
+
+  const validation = validateOpenAPISpec(spec, filepath);
+
+  return {
+    parseError: null,
+    validation,
+  };
+}
+
+/**
+ * Main execution
+ */
+async function main() {
+  console.log(`${colors.blue}OpenAPI Specification Validator${colors.reset}`);
+  console.log('='.repeat(60));
+
+  // Check if specific file provided
+  const targetFile = process.argv[2];
+
+  let specFiles;
+  if (targetFile) {
+    const resolvedPath = path.resolve(targetFile);
+    if (!await fs.pathExists(resolvedPath)) {
+      console.error(`${colors.red}✗ File not found:${colors.reset} ${targetFile}`);
+      process.exit(1);
+    }
+    specFiles = [resolvedPath];
+  } else {
+    // Find all spec files in artifacts
+    if (!await fs.pathExists(ARTIFACTS_DIR)) {
+      console.log(`${colors.yellow}⚠ Artifacts directory not found:${colors.reset} ${ARTIFACTS_DIR}`);
+      console.log('Run sync:artifacts first to populate the artifacts directory');
+      process.exit(0);
+    }
+
+    specFiles = await findSpecFiles(ARTIFACTS_DIR);
+
+    if (specFiles.length === 0) {
+      console.log(`${colors.yellow}⚠ No OpenAPI specification files found${colors.reset}`);
+      console.log('\nSearched for files matching:');
+      console.log('  - *openapi*.{yaml,yml,json}');
+      console.log('  - *swagger*.{yaml,yml,json}');
+      console.log('  - api-spec*.{yaml,yml,json}');
+      console.log('  - api.{yaml,yml,json}');
+      process.exit(0);
+    }
+  }
+
+  console.log(`\nFound ${specFiles.length} specification file(s)\n`);
+
+  // Validate all specs
+  let validCount = 0;
+  let invalidCount = 0;
+  const results = [];
+
+  for (const filepath of specFiles) {
+    const result = await validateSpec(filepath);
+    const isValid = formatResults(filepath, result);
+
+    results.push({ filepath, result, valid: isValid });
+
+    if (isValid) {
+      validCount++;
+    } else {
+      invalidCount++;
+    }
+  }
+
+  // Summary
+  console.log(`\n${'='.repeat(60)}`);
+  console.log(`${colors.blue}Summary${colors.reset}`);
+  console.log('='.repeat(60));
+  console.log(`Total files: ${specFiles.length}`);
+  console.log(`${colors.green}Valid: ${validCount}${colors.reset}`);
+  console.log(`${colors.red}Invalid: ${invalidCount}${colors.reset}`);
+
+  // Exit code based on results
+  if (invalidCount > 0) {
+    console.log(`\n${colors.red}✗ Validation failed${colors.reset}`);
+    process.exit(1);
+  } else {
+    console.log(`\n${colors.green}✓ All specifications are valid${colors.reset}`);
+    process.exit(0);
+  }
+}
+
+// Run main function
+main().catch(error => {
+  console.error(`\n${colors.red}Fatal error:${colors.reset}`, error);
+  process.exit(1);
+});

@@ -1,0 +1,107 @@
+import React from 'react';
+import './Button.css';
+
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  /**
+   * The visual style variant of the button
+   */
+  variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
+
+  /**
+   * The size of the button
+   */
+  size?: 'sm' | 'md' | 'lg';
+
+  /**
+   * Whether the button should take up the full width of its container
+   */
+  fullWidth?: boolean;
+
+  /**
+   * Whether the button is in a loading state
+   */
+  loading?: boolean;
+
+  /**
+   * The content of the button
+   */
+  children: React.ReactNode;
+}
+
+/**
+ * Button component with multiple variants, sizes, and states.
+ * Fully accessible with WCAG 2.1 AA compliance.
+ */
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      variant = 'primary',
+      size = 'md',
+      fullWidth = false,
+      loading = false,
+      disabled = false,
+      children,
+      className = '',
+      type = 'button',
+      ...props
+    },
+    ref
+  ) => {
+    const classNames = [
+      'button',
+      `button--${variant}`,
+      `button--${size}`,
+      fullWidth && 'button--full-width',
+      loading && 'button--loading',
+      className,
+    ]
+      .filter(Boolean)
+      .join(' ');
+
+    return (
+      <button
+        ref={ref}
+        type={type}
+        className={classNames}
+        disabled={disabled || loading}
+        aria-disabled={disabled || loading}
+        aria-busy={loading}
+        {...props}
+      >
+        {loading && (
+          <span className="button__loader" aria-hidden="true">
+            <svg
+              className="button__spinner"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                className="button__spinner-track"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="3"
+              />
+              <circle
+                className="button__spinner-head"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+              />
+            </svg>
+          </span>
+        )}
+        <span className={loading ? 'button__content--hidden' : 'button__content'}>
+          {children}
+        </span>
+      </button>
+    );
+  }
+);
+
+Button.displayName = 'Button';

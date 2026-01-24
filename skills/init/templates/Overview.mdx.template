@@ -1,0 +1,314 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Overview" />
+
+# {{PROJECT_NAME}} Planning Hub
+
+Welcome to the planning hub for **{{PROJECT_NAME}}**.
+
+This interactive documentation site provides comprehensive SDLC artifacts across all project phases, from initial requirements through deployment and maintenance.
+
+## What is the Planning Hub?
+
+The Planning Hub is a centralized, interactive documentation platform built with Storybook that brings together all your project artifacts in one place:
+
+- **Living Documentation** - Artifacts update automatically as your project evolves
+- **Interactive Visualizations** - View architecture diagrams, API specs, and user flows
+- **Team Collaboration** - Share a single source of truth with stakeholders
+- **Version Controlled** - All artifacts are tracked in git alongside code
+
+## Getting Started
+
+### First Steps
+
+1. **Review the Vision** - Understand the project goals and scope
+2. **Explore Requirements** - Review user stories and functional requirements
+3. **Study Architecture** - Examine system design and technical decisions
+4. **Check UX Designs** - View user journeys and interface mockups
+5. **Review Test Plans** - Understand verification and validation strategy
+
+### For Project Managers
+
+- Track project progress and milestones
+- Review sprint planning and retrospectives
+- Monitor risk assessments and mitigation strategies
+- Access stakeholder communication artifacts
+
+### For Business Analysts
+
+- Document business requirements and use cases
+- Maintain business process models
+- Track requirement traceability
+- Create user personas and journey maps
+
+### For Architects
+
+- Document architectural decisions (ADRs)
+- Maintain system architecture diagrams
+- Define integration patterns and APIs
+- Document security and compliance requirements
+
+### For Developers
+
+- Reference API specifications
+- Review data models and schemas
+- Understand component architecture
+- Access coding standards and guidelines
+
+### For Testers
+
+- Review test strategies and plans
+- Access test cases and scenarios
+- Track quality metrics
+- Review security and performance testing requirements
+
+### For UX Designers
+
+- Maintain design systems and patterns
+- Document user research findings
+- Create and share user flows
+- Manage accessibility requirements
+
+## How to Use This Hub
+
+### Navigation
+
+Use the sidebar to browse different sections:
+
+- **Overview** - This page and getting started guides
+- **Requirements** - User stories, epics, and functional requirements
+- **Architecture** - System design, diagrams, and technical decisions
+- **UX & Design** - User research, wireframes, and design specifications
+- **Testing** - Test plans, strategies, and quality assurance
+- **API Documentation** - OpenAPI/Swagger specifications
+- **Project Management** - Plans, schedules, and status reports
+
+### Search
+
+Use Storybook's search feature to find specific content:
+
+- Press `Ctrl/Cmd + K` to open search
+- Search by title, content, or tags
+- Filter by category
+
+### Auto-Sync
+
+The Planning Hub automatically syncs with your `docs/` folder:
+
+1. Edit files in `docs/` directory
+2. Changes are detected automatically
+3. Storybook reloads with updated content
+4. No manual refresh needed
+
+### Sharing
+
+Deploy the Planning Hub to share with your team:
+
+```bash
+# Build static site
+pnpm build:storybook
+
+# Deploy to hosting (e.g., Netlify, Vercel, GitHub Pages)
+# The built site is in packages/planning-hub/storybook-static/
+```
+
+## Module Descriptions
+
+### Requirements Module
+
+Document all project requirements including:
+
+- **User Stories** - Feature descriptions from user perspective
+- **Epics** - High-level feature groupings
+- **Functional Requirements** - Detailed system behaviors
+- **Non-Functional Requirements** - Performance, security, scalability
+- **Acceptance Criteria** - Definition of done for features
+
+### Architecture Module
+
+Technical design and decisions:
+
+- **System Architecture** - High-level system design diagrams
+- **Component Design** - Detailed component specifications
+- **Data Models** - Database schemas and entity relationships
+- **API Design** - RESTful and GraphQL API specifications
+- **Architecture Decision Records (ADRs)** - Key technical decisions
+- **Integration Patterns** - External system integrations
+
+### UX & Design Module
+
+User experience and interface design:
+
+- **User Research** - Personas, interviews, and surveys
+- **User Flows** - Step-by-step user journey maps
+- **Wireframes** - Low-fidelity interface mockups
+- **Prototypes** - Interactive design prototypes
+- **Design System** - Component library and style guide
+- **Accessibility** - WCAG compliance documentation
+
+### Testing Module
+
+Quality assurance and testing:
+
+- **Test Strategy** - Overall testing approach
+- **Test Plans** - Detailed test scenarios and cases
+- **Test Data** - Sample data for testing
+- **Quality Metrics** - Coverage, defect rates, performance
+- **Security Testing** - Vulnerability assessments
+- **Performance Testing** - Load and stress test results
+
+### Project Management Module
+
+Project planning and tracking:
+
+- **Project Charter** - Goals, scope, and stakeholders
+- **Work Breakdown Structure** - Task hierarchy
+- **Sprint Plans** - Iteration planning and goals
+- **Status Reports** - Progress updates and metrics
+- **Risk Register** - Identified risks and mitigation
+- **Retrospectives** - Team improvement actions
+
+### DevOps Module
+
+Infrastructure and deployment:
+
+- **Deployment Guide** - Deployment procedures
+- **Infrastructure Diagrams** - Server and network architecture
+- **CI/CD Pipeline** - Build and deployment automation
+- **Monitoring** - Application and infrastructure monitoring
+- **Incident Response** - Troubleshooting and recovery procedures
+
+## Next Steps
+
+### Start Planning
+
+Run the planning wizard to create your first feature:
+
+```bash
+/sdlc:plan
+```
+
+The wizard will guide you through:
+
+1. Feature discovery and requirements
+2. User story creation
+3. Acceptance criteria definition
+4. Architecture planning
+5. Test scenario generation
+
+### Customize Your Hub
+
+Personalize the Planning Hub:
+
+- Add custom Storybook addons
+- Configure themes and branding
+- Create custom MDX components
+- Add team-specific sections
+
+### Share with Your Team
+
+1. Commit artifacts to git
+2. Deploy Planning Hub to hosting
+3. Share URL with stakeholders
+4. Enable collaboration and feedback
+
+## Best Practices
+
+### Documentation Standards
+
+- **Be Concise** - Clear and brief documentation is better than lengthy docs
+- **Use Diagrams** - Visual representations are easier to understand
+- **Keep Updated** - Treat docs as code - update them with changes
+- **Version Control** - Commit documentation changes with code changes
+- **Link Artifacts** - Cross-reference related documents
+
+### Artifact Organization
+
+- Use consistent naming conventions
+- Organize by module (req, arch, ux, test)
+- Include dates in artifact names
+- Tag artifacts with version numbers
+- Maintain a changelog
+
+### Team Collaboration
+
+- Review documentation in pull requests
+- Assign documentation owners
+- Schedule documentation review sessions
+- Collect feedback from stakeholders
+- Iterate based on team input
+
+## Troubleshooting
+
+### Storybook Not Loading
+
+If Storybook fails to start:
+
+1. Clear cache: `rm -rf node_modules && pnpm install`
+2. Check Node version: `node --version` (requires 18+)
+3. Check for port conflicts on 6006
+4. Review console for error messages
+
+### Artifacts Not Syncing
+
+If changes in `docs/` aren't appearing:
+
+1. Check that sync script is running: `pnpm sync:artifacts:watch`
+2. Verify file paths are correct
+3. Check for file permission issues
+4. Manually trigger sync: `pnpm sync:artifacts`
+
+### Diagrams Not Rendering
+
+If Mermaid diagrams fail to render:
+
+1. Validate Mermaid syntax at [mermaid.live](https://mermaid.live)
+2. Check browser console for errors
+3. Ensure diagram is wrapped in code blocks with `mermaid` language
+4. Try simplifying the diagram to isolate issues
+
+### API Specs Not Loading
+
+If OpenAPI specs don't display:
+
+1. Validate spec at [editor.swagger.io](https://editor.swagger.io)
+2. Check file path in `public/artifacts/`
+3. Verify YAML/JSON syntax
+4. Check browser console for fetch errors
+
+## Resources
+
+### Documentation
+
+- [Storybook Documentation](https://storybook.js.org/docs)
+- [MDX Documentation](https://mdxjs.com/)
+- [Mermaid Diagram Syntax](https://mermaid.js.org/)
+- [OpenAPI Specification](https://swagger.io/specification/)
+
+### SDLC Best Practices
+
+- [Agile Manifesto](https://agilemanifesto.org/)
+- [Architecture Decision Records](https://adr.github.io/)
+- [User Story Mapping](https://www.jpattonassociates.com/user-story-mapping/)
+- [Test-Driven Development](https://martinfowler.com/bliki/TestDrivenDevelopment.html)
+
+### Tools
+
+- [Mermaid Live Editor](https://mermaid.live)
+- [Swagger Editor](https://editor.swagger.io)
+- [Excalidraw](https://excalidraw.com) - For quick diagrams
+- [Figma](https://figma.com) - For UX design
+
+## Support
+
+Need help? Check these resources:
+
+- **SDLC Plugin README** - Installation and configuration guide
+- **Storybook Docs** - Component and addon documentation
+- **GitHub Issues** - Report bugs and request features
+- **Team Chat** - Ask questions in your team channel
+
+---
+
+**Last Updated**: {{DATE}}
+**Generated by**: SDLC Plugin v0.1.0
