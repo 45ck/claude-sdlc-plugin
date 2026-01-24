@@ -1,0 +1,65 @@
+import React from 'react';
+import './Card.css';
+
+export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: 'elevated' | 'outlined' | 'filled';
+  padding?: 'none' | 'sm' | 'md' | 'lg';
+  children: React.ReactNode;
+}
+
+export const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ variant = 'elevated', padding = 'md', children, className = '', ...props }, ref) => {
+    const classes = [
+      'card',
+      `card--${variant}`,
+      `card--padding-${padding}`,
+      className,
+    ]
+      .filter(Boolean)
+      .join(' ');
+
+    return (
+      <div ref={ref} className={classes} {...props}>
+        {children}
+      </div>
+    );
+  }
+);
+
+Card.displayName = 'Card';
+
+export interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
+}
+
+export const CardHeader: React.FC<CardHeaderProps> = ({ children, className = '', ...props }) => {
+  return (
+    <div className={`card__header ${className}`} {...props}>
+      {children}
+    </div>
+  );
+};
+
+export interface CardBodyProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
+}
+
+export const CardBody: React.FC<CardBodyProps> = ({ children, className = '', ...props }) => {
+  return (
+    <div className={`card__body ${className}`} {...props}>
+      {children}
+    </div>
+  );
+};
+
+export interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
+}
+
+export const CardFooter: React.FC<CardFooterProps> = ({ children, className = '', ...props }) => {
+  return (
+    <div className={`card__footer ${className}`} {...props}>
+      {children}
+    </div>
+  );
+};

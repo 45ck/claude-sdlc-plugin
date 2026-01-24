@@ -1,0 +1,168 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { Stack } from './Stack';
+
+const meta: Meta<typeof Stack> = {
+  title: 'UI Kit/Primitives/Stack',
+  component: Stack,
+  tags: ['autodocs'],
+  argTypes: {
+    direction: {
+      control: 'radio',
+      options: ['horizontal', 'vertical'],
+      description: 'Stack direction',
+    },
+    spacing: {
+      control: 'select',
+      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl'],
+      description: 'Gap between items',
+    },
+    align: {
+      control: 'select',
+      options: ['start', 'center', 'end', 'stretch'],
+      description: 'Cross-axis alignment',
+    },
+    justify: {
+      control: 'select',
+      options: ['start', 'center', 'end', 'space-between', 'space-around'],
+      description: 'Main-axis justification',
+    },
+    wrap: {
+      control: 'boolean',
+      description: 'Allow items to wrap',
+    },
+  },
+};
+
+export default meta;
+type Story = StoryObj<typeof Stack>;
+
+const Box = ({ children }: { children: React.ReactNode }) => (
+  <div
+    style={{
+      background: '#E3F2FD',
+      border: '1px solid #1E88E5',
+      padding: '1rem',
+      borderRadius: '4px',
+    }}
+  >
+    {children}
+  </div>
+);
+
+export const Vertical: Story = {
+  args: {
+    direction: 'vertical',
+    spacing: 'md',
+    children: (
+      <>
+        <Box>Item 1</Box>
+        <Box>Item 2</Box>
+        <Box>Item 3</Box>
+      </>
+    ),
+  },
+};
+
+export const Horizontal: Story = {
+  args: {
+    direction: 'horizontal',
+    spacing: 'md',
+    children: (
+      <>
+        <Box>Item 1</Box>
+        <Box>Item 2</Box>
+        <Box>Item 3</Box>
+      </>
+    ),
+  },
+};
+
+export const SpacingOptions: Story = {
+  render: () => (
+    <Stack direction="vertical" spacing="lg">
+      <div>
+        <h4>Spacing: none</h4>
+        <Stack direction="horizontal" spacing="none">
+          <Box>1</Box>
+          <Box>2</Box>
+          <Box>3</Box>
+        </Stack>
+      </div>
+      <div>
+        <h4>Spacing: sm</h4>
+        <Stack direction="horizontal" spacing="sm">
+          <Box>1</Box>
+          <Box>2</Box>
+          <Box>3</Box>
+        </Stack>
+      </div>
+      <div>
+        <h4>Spacing: md</h4>
+        <Stack direction="horizontal" spacing="md">
+          <Box>1</Box>
+          <Box>2</Box>
+          <Box>3</Box>
+        </Stack>
+      </div>
+      <div>
+        <h4>Spacing: lg</h4>
+        <Stack direction="horizontal" spacing="lg">
+          <Box>1</Box>
+          <Box>2</Box>
+          <Box>3</Box>
+        </Stack>
+      </div>
+    </Stack>
+  ),
+};
+
+export const Centered: Story = {
+  args: {
+    direction: 'horizontal',
+    spacing: 'md',
+    align: 'center',
+    justify: 'center',
+    style: { minHeight: '200px', border: '2px dashed #ccc' },
+    children: (
+      <>
+        <Box>Centered Item 1</Box>
+        <Box>Centered Item 2</Box>
+      </>
+    ),
+  },
+};
+
+export const SpaceBetween: Story = {
+  args: {
+    direction: 'horizontal',
+    spacing: 'md',
+    justify: 'space-between',
+    style: { width: '100%', border: '2px dashed #ccc', padding: '1rem' },
+    children: (
+      <>
+        <Box>Left</Box>
+        <Box>Middle</Box>
+        <Box>Right</Box>
+      </>
+    ),
+  },
+};
+
+export const Wrap: Story = {
+  args: {
+    direction: 'horizontal',
+    spacing: 'md',
+    wrap: true,
+    style: { maxWidth: '400px', border: '2px dashed #ccc', padding: '1rem' },
+    children: (
+      <>
+        <Box>Item 1</Box>
+        <Box>Item 2</Box>
+        <Box>Item 3</Box>
+        <Box>Item 4</Box>
+        <Box>Item 5</Box>
+        <Box>Item 6</Box>
+      </>
+    ),
+  },
+};

@@ -1,0 +1,47 @@
+import React from 'react';
+import './Stack.css';
+
+export interface StackProps extends React.HTMLAttributes<HTMLDivElement> {
+  direction?: 'horizontal' | 'vertical';
+  spacing?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  align?: 'start' | 'center' | 'end' | 'stretch';
+  justify?: 'start' | 'center' | 'end' | 'space-between' | 'space-around';
+  wrap?: boolean;
+  children: React.ReactNode;
+}
+
+export const Stack = React.forwardRef<HTMLDivElement, StackProps>(
+  (
+    {
+      direction = 'vertical',
+      spacing = 'md',
+      align = 'stretch',
+      justify = 'start',
+      wrap = false,
+      children,
+      className = '',
+      ...props
+    },
+    ref
+  ) => {
+    const classes = [
+      'stack',
+      `stack--${direction}`,
+      `stack--spacing-${spacing}`,
+      `stack--align-${align}`,
+      `stack--justify-${justify}`,
+      wrap ? 'stack--wrap' : '',
+      className,
+    ]
+      .filter(Boolean)
+      .join(' ');
+
+    return (
+      <div ref={ref} className={classes} {...props}>
+        {children}
+      </div>
+    );
+  }
+);
+
+Stack.displayName = 'Stack';

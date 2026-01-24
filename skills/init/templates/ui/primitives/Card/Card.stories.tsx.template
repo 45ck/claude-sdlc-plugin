@@ -1,0 +1,165 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { Card, CardHeader, CardBody, CardFooter } from './Card';
+
+const meta: Meta<typeof Card> = {
+  title: 'UI Kit/Primitives/Card',
+  component: Card,
+  tags: ['autodocs'],
+  argTypes: {
+    variant: {
+      control: 'radio',
+      options: ['elevated', 'outlined', 'filled'],
+      description: 'Visual style variant',
+    },
+    padding: {
+      control: 'select',
+      options: ['none', 'sm', 'md', 'lg'],
+      description: 'Card padding',
+    },
+  },
+};
+
+export default meta;
+type Story = StoryObj<typeof Card>;
+
+export const Elevated: Story = {
+  args: {
+    variant: 'elevated',
+    padding: 'md',
+    children: (
+      <>
+        <h3>Elevated Card</h3>
+        <p>This is an elevated card with a shadow effect.</p>
+      </>
+    ),
+  },
+};
+
+export const Outlined: Story = {
+  args: {
+    variant: 'outlined',
+    padding: 'md',
+    children: (
+      <>
+        <h3>Outlined Card</h3>
+        <p>This is an outlined card with a border.</p>
+      </>
+    ),
+  },
+};
+
+export const Filled: Story = {
+  args: {
+    variant: 'filled',
+    padding: 'md',
+    children: (
+      <>
+        <h3>Filled Card</h3>
+        <p>This is a filled card with a background color.</p>
+      </>
+    ),
+  },
+};
+
+export const WithSections: Story = {
+  args: {
+    variant: 'elevated',
+    padding: 'none',
+    children: (
+      <>
+        <CardHeader>
+          <h3 style={{ margin: 0 }}>Card Title</h3>
+        </CardHeader>
+        <CardBody>
+          <p>This is the card body content. It can contain any elements you need.</p>
+          <ul>
+            <li>Feature 1</li>
+            <li>Feature 2</li>
+            <li>Feature 3</li>
+          </ul>
+        </CardBody>
+        <CardFooter>
+          <button>Action</button>
+        </CardFooter>
+      </>
+    ),
+  },
+};
+
+export const AllVariants: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+      <Card variant="elevated" padding="md">
+        <h4>Elevated</h4>
+        <p>Shadow effect</p>
+      </Card>
+      <Card variant="outlined" padding="md">
+        <h4>Outlined</h4>
+        <p>Border style</p>
+      </Card>
+      <Card variant="filled" padding="md">
+        <h4>Filled</h4>
+        <p>Background color</p>
+      </Card>
+    </div>
+  ),
+};
+
+export const PaddingVariations: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <Card variant="outlined" padding="none">
+        <p style={{ margin: 0 }}>No padding</p>
+      </Card>
+      <Card variant="outlined" padding="sm">
+        <p style={{ margin: 0 }}>Small padding</p>
+      </Card>
+      <Card variant="outlined" padding="md">
+        <p style={{ margin: 0 }}>Medium padding</p>
+      </Card>
+      <Card variant="outlined" padding="lg">
+        <p style={{ margin: 0 }}>Large padding</p>
+      </Card>
+    </div>
+  ),
+};
+
+export const ProductCard: Story = {
+  args: {
+    variant: 'elevated',
+    padding: 'none',
+    style: { maxWidth: '300px' },
+    children: (
+      <>
+        <div
+          style={{
+            height: '200px',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          }}
+        />
+        <CardBody>
+          <h3 style={{ marginTop: 0 }}>Product Name</h3>
+          <p style={{ color: '#666' }}>
+            This is a product description. It highlights the key features and benefits.
+          </p>
+          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1E88E5' }}>$99.99</div>
+        </CardBody>
+        <CardFooter>
+          <button
+            style={{
+              width: '100%',
+              padding: '0.5rem',
+              background: '#1E88E5',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+            }}
+          >
+            Add to Cart
+          </button>
+        </CardFooter>
+      </>
+    ),
+  },
+};

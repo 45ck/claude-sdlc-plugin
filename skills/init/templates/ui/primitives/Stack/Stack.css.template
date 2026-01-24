@@ -1,0 +1,80 @@
+.stack {
+  display: flex;
+}
+
+/* Direction */
+.stack--vertical {
+  flex-direction: column;
+}
+
+.stack--horizontal {
+  flex-direction: row;
+}
+
+/* Spacing */
+.stack--spacing-none {
+  gap: 0;
+}
+
+.stack--spacing-xs {
+  gap: var(--space-1, 0.25rem);
+}
+
+.stack--spacing-sm {
+  gap: var(--space-2, 0.5rem);
+}
+
+.stack--spacing-md {
+  gap: var(--space-4, 1rem);
+}
+
+.stack--spacing-lg {
+  gap: var(--space-6, 1.5rem);
+}
+
+.stack--spacing-xl {
+  gap: var(--space-8, 2rem);
+}
+
+/* Align (cross-axis) */
+.stack--align-start {
+  align-items: flex-start;
+}
+
+.stack--align-center {
+  align-items: center;
+}
+
+.stack--align-end {
+  align-items: flex-end;
+}
+
+.stack--align-stretch {
+  align-items: stretch;
+}
+
+/* Justify (main-axis) */
+.stack--justify-start {
+  justify-content: flex-start;
+}
+
+.stack--justify-center {
+  justify-content: center;
+}
+
+.stack--justify-end {
+  justify-content: flex-end;
+}
+
+.stack--justify-space-between {
+  justify-content: space-between;
+}
+
+.stack--justify-space-around {
+  justify-content: space-around;
+}
+
+/* Wrap */
+.stack--wrap {
+  flex-wrap: wrap;
+}
