@@ -22,8 +22,17 @@ The SDLC plugin helps teams and students implement industry-standard software en
 ### Three Core Skills
 
 - **`/sdlc:init`** - Scaffolds monorepo with Storybook planning hub, design system, and documentation structure
-- **`/sdlc:plan`** - Runs discovery wizard, infers project type, generates appropriate SDLC modules
+- **`/sdlc:plan`** - **Iterative planning with client validation** - generates artifacts in proper dependency order (scenarios → workflows → models → data → API → design), validating each stage with the client before proceeding
 - **`/sdlc:update`** - Syncs artifacts with implementation status, updates traceability matrices
+
+### Iterative Planning Philosophy
+
+The plugin follows industry-standard SDLC practices with an iterative, client-facing approach:
+
+- **Concrete before abstract** - Start with scenarios and what users do, then model structure
+- **Validate incrementally** - Generate an artifact, show to client, get feedback, then proceed
+- **High-fidelity from the start** - Skip low-fi wireframes; generate real, interactive components
+- **Proper dependency ordering** - Scenarios → Use Cases → Class Diagrams → ERD → API → Design
 
 ### Specialized Subagents
 
@@ -116,12 +125,12 @@ Opens Storybook at http://localhost:6006
 /sdlc:plan
 ```
 
-This runs an interactive wizard that:
-- Classifies your project type
-- Asks targeted questions about requirements
-- Infers which SDLC modules to generate
-- Invokes specialized subagents to create artifacts
-- Generates MDX pages in Storybook
+This runs an **iterative planning wizard** that:
+- Classifies your project type and infers which SDLC modules to generate
+- Generates artifacts in proper dependency order (scenarios → use cases → models → ERD → API → design)
+- **Validates each stage with you** before proceeding to dependent work
+- Shows artifacts in Storybook for interactive review
+- Tracks progress in `docs/sdlc.state.json` (can resume if interrupted)
 
 ### 5. Sync Implementation Progress
 
@@ -160,25 +169,34 @@ This:
 
 ### `/sdlc:plan`
 
-**Purpose**: Create planning artifacts through guided discovery
+**Purpose**: Iterative planning with client validation at each stage
 
-**Plan Types**:
-- Feature planning (full SDLC coverage)
-- Architecture Decision Record (ADR)
-- API specification
-- UX prototype
+**Core Principles**:
+- **Iterate, don't batch** - Generate artifact → show client → get feedback → proceed
+- **Concrete before abstract** - Scenarios first, then models
+- **High-fidelity design** - Skip wireframes, use design system for real components
 
-**Workflow**:
-1. **Phase 1**: Closed questions (project classification)
-2. **Phase 2**: Open questions (requirements discovery)
-3. **Phase 3**: Closed questions (validation & standards)
-4. **Phase 4**: Artifact generation (invokes subagents)
-5. **Phase 5**: Output & next steps
+**Planning Stages** (each validated before proceeding):
+
+| Stage | Artifacts | Checkpoint |
+|-------|-----------|------------|
+| 0. Kickoff | Charter, scope, constraints | "Does this capture the project scope?" |
+| 1. Requirements | Tasks, events, initial entities | "Is this what you need?" |
+| 2. Scenarios | As-is scenarios, visionary scenarios, personas | "Review in Storybook - do these match reality?" |
+| 3. Use Cases | Use case diagram, activity diagrams | "Do these workflows look correct?" |
+| 4. Domain Model | Class diagrams, sequence diagrams | "Are these the right entities?" |
+| 5. Data Model | ERD, table definitions | "Does this structure support our workflows?" |
+| 6. API Contract | OpenAPI specification | "Check Swagger UI - all endpoints covered?" |
+| 7. Prototypes | High-fi components, Storybook stories | "Click through - does this match expectations?" |
+| 8. Supporting | Security, Quality, PM artifacts | "Any concerns with these?" |
+| 9. Signoff | RTM, planning summary | "Ready to proceed to implementation?" |
+
+**State Tracking**: Progress is saved to `docs/sdlc.state.json` allowing planning to resume if interrupted.
 
 **Example**:
 ```bash
 /sdlc:plan
-# Interactive wizard starts...
+# Iterative wizard with validation at each stage...
 ```
 
 ### `/sdlc:update`

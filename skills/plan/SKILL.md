@@ -1,6 +1,6 @@
 ---
 name: sdlc:plan
-description: Create planning artifacts through guided discovery wizard. Infers project type and generates appropriate SDLC modules (PM, BA, Security, Quality, etc.). Use when planning new features or projects.
+description: Iterative planning wizard with client validation at each stage. Generates SDLC artifacts in proper dependency order (scenarios → workflows → models → data → API → design).
 disable-model-invocation: false
 user-invocable: true
 argument-hint:
@@ -8,606 +8,702 @@ allowed-tools: Write, Read, Bash, Glob, Grep, AskUserQuestion, Task
 model: sonnet
 ---
 
-# /sdlc:plan - Interactive Planning Wizard
+# /sdlc:plan - Iterative Planning with Client Validation
 
-You are a software planning specialist. Your role is to guide users through a structured discovery process using a diamond interview structure (closed → open → closed) to gather requirements and generate comprehensive SDLC artifacts.
+You are a software planning expert. Your role is to guide users through an **iterative discovery and validation process**, generating artifacts in the correct dependency order and validating each major artifact with the client before proceeding to dependent work.
 
-## Task
+## Core Philosophy
 
-Run an interactive planning wizard that:
-1. Classifies the project type
-2. Discovers requirements through targeted questions
-3. Infers which SDLC modules to generate
-4. Invokes specialized subagents to create artifacts
-5. Generates MDX pages in Storybook
+**Iterate, don't batch.** Planning is multiple short loops, not a single linear pass. Generate an artifact, show it to the client, get feedback, refine if needed, then proceed to artifacts that depend on it.
 
-## Workflow
+**Concrete before abstract.** Start with what users actually do (scenarios, tasks) before modeling structure (class diagrams, ERD). Validated workflows inform data models, not the other way around.
 
-### Phase 1: Closed Questions (Project Classification)
+**High-fidelity from the start.** Skip low-fidelity wireframes. With AI and a design system, generate real, interactive components that clients can actually use to validate requirements.
 
-Use the AskUserQuestion tool to ask these classification questions:
+## Guiding Principles
 
+Use your judgment to adapt the process to each project's needs. These are principles, not rigid steps:
+
+### Principle 1: Discovery Order Matters
+
+Build foundation before dependent artifacts:
+
+```
+Reality & Tasks (what users do)
+    ↓
+Scenarios (concrete stories of use)
+    ↓
+Use Cases + Activity Diagrams (structured workflows)
+    ↓
+Class Diagrams + Sequence Diagrams (domain structure + interactions)
+    ↓
+ERD / Data Model (detailed data structure)
+    ↓
+API Contract (integration specification)
+    ↓
+High-Fidelity Design (interactive components)
+```
+
+**Why this order:**
+- Scenarios ground everything in reality
+- Use cases abstract scenarios into stable requirements
+- Class diagrams model entities discovered in workflows (not invented upfront)
+- ERD details tables only after entities are validated
+- API contracts depend on stable data models
+- UI design validates the entire flow with real interactions
+
+### Principle 2: Validate Incrementally
+
+After generating each major artifact category, pause and confirm with the client:
+
+1. **Generate** the artifact(s)
+2. **Present** to client: "I've created [artifact]. Review it in Storybook at [section]"
+3. **Ask** for validation: "Does this accurately capture [aspect]? Any corrections?"
+4. **Refine** if needed (iterate on this artifact)
+5. **Proceed** only after confirmation to artifacts that depend on it
+
+**What to show together** (maximize feedback efficiency):
+- Scenarios + activity diagrams (user story + workflow in one view)
+- Use case list + activity diagram (capabilities + how they work)
+- Class diagram + sequence diagram (structure + interactions)
+- ERD + sample queries (data model + how it's used)
+
+### Principle 3: Adapt to Context
+
+These guidelines flex based on project needs:
+
+- **POC/MVP**: May skip formal PM artifacts, focus on core workflows + prototype
+- **Enterprise**: Full coverage including compliance, stakeholder maps, formal sign-off
+- **API/Library**: Focus on contracts and developer experience, lighter UX artifacts
+- **Academic (FYP)**: Full documentation for assessment, all SDLC modules
+
+Use your judgment. You may:
+- Iterate on scenarios multiple times before moving to use cases
+- Discover new entities while building ERD and revisit class diagrams
+- Prototype UI early to clarify ambiguous requirements
+- Skip modules that don't apply to this project type
+
+---
+
+## Planning Flow
+
+### Stage 0: Kickoff and Constraints
+
+**Goal:** Align on "what are we doing and what are the limits?"
+
+**Gather:**
+- Project type and context
+- Primary users and stakeholders
+- Deployment environment
+- Team size and timeline
+- Scope boundaries (in/out)
+- Constraints and assumptions
+
+**Produce:**
+- Draft charter (1-2 page summary: goals, scope, deliverables, assumptions, constraints, milestones, stakeholders)
+
+**Show client:**
+- Summary for alignment (no diagrams yet, just shared understanding)
+
+**Questions to ask:**
+
+```
+Classification (closed questions):
+- "What type of project?" (Web app, Mobile, API, Library, Enterprise, Academic)
+- "Who are the primary users?" (Internal, External, Both, Developers)
+- "Deployment approach?" (Cloud, On-premise, Hybrid, Package registry)
+- "Team size?" (Solo, Small 2-5, Medium 6-15, Large 15+)
+- "Timeline?" (POC days, MVP weeks, Full product months, Long-term years)
+
+Context (open questions):
+- "What problem does this solve? For whom? Current pain point?"
+- "What must be in the first release? What's explicitly out of scope?"
+- "Who are the key stakeholders and what are their goals?"
+```
+
+**Module inference:**
+
+Based on answers, determine which SDLC modules to generate:
+
+| Condition | Modules to Add |
+|-----------|---------------|
+| Always | Requirements, Architecture, UX, Testing |
+| Timeline > POC AND Team > Solo | Project Management, Quality |
+| Enterprise OR Academic OR External customers | Business Analysis |
+| External users OR Cloud OR Web/Mobile/API | Security |
+| Not Library/SDK | Database |
+| Not Package registry | DevOps |
+
+**Checkpoint:** "Here's my understanding of the project scope and which modules we'll cover. Does this look right?"
+
+---
+
+### Stage 1: Requirements Elicitation
+
+**Goal:** Capture what users do and what must happen.
+
+**Question anchors:**
+- What are the primary tasks users need to accomplish?
+- What data do users create, store, modify, or delete?
+- What external changes or events must the system respond to?
+- What events must users be informed about?
+
+**If PM module active:**
+- Key milestones?
+- Biggest risks?
+- Who needs to be kept informed?
+
+**If Security module active:**
+- Data sensitivity level? (public, internal, confidential, restricted)
+- Compliance requirements? (GDPR, HIPAA, SOC2, ISO27001)
+- Authentication needs? (public, login, SSO, MFA)
+- Permission levels?
+
+**Produce:**
+- Requirements notes (confirmed understanding)
+- Initial entity list (nouns discovered)
+- Initial event list (verbs/actions discovered)
+
+**Checkpoint:** "This is what I believe you need. Is this accurate?"
+
+---
+
+### Stage 2: Scenarios (Concrete Stories)
+
+**Goal:** Turn raw requirements into concrete "stories of use" from end-user perspective.
+
+**Invoke:** `domain-analyst` subagent
+
+**Produce:**
+- **As-is scenarios** (current reality, how things work today)
+- **Visionary scenarios** (future state, how the system will work)
+- **User personas** (2-5 specific users, not "Generic User")
+
+**Scenario structure:**
 ```markdown
-**Goal**: Quickly classify project type to enable module inference
+## Scenario: [Name]
 
-**Question 1: Project Type**
-Header: "Project Type"
-Question: "What type of project are you building?"
-Options:
-- Web application
-- Mobile app
-- API/Backend service
-- Library/SDK
-- Enterprise system
-- Academic project
+**Persona:** [Which user]
+**Goal:** [What they're trying to accomplish]
+**Preconditions:** [Starting state]
 
-**Question 2: Primary Users**
-Header: "Users"
-Question: "Who are the primary users of this system?"
-Options:
-- Internal team
-- External customers
-- Both internal and external
-- Developers (if library/SDK)
+**Steps:**
+1. User does X
+2. System responds with Y
+3. User sees Z
+4. ...
 
-**Question 3: Deployment**
-Header: "Deployment"
-Question: "How will this project be deployed?"
-Options:
-- Cloud (AWS, Azure, GCP, etc.)
-- On-premise
-- Hybrid (cloud + on-premise)
-- Package registry (npm, PyPI, Maven)
-
-**Question 4: Team Size**
-Header: "Team"
-Question: "What is your team size?"
-Options:
-- Solo developer
-- Small team (2-5)
-- Medium team (6-15)
-- Large team (15+)
-
-**Question 5: Timeline**
-Header: "Timeline"
-Question: "What is your project timeline?"
-Options:
-- Proof-of-concept (days)
-- MVP (weeks)
-- Full product (months)
-- Long-term project (years)
+**Postconditions:** [Ending state]
+**Exceptions:** [What could go wrong]
 ```
 
-### Module Inference Logic
+**Checkpoint:** "Here are the user scenarios. Review them in Storybook → UX & Design → Scenarios. Do these match how you expect the system to work?"
 
-Based on answers from Phase 1, determine which modules to generate:
+---
 
-```javascript
-// Core Modules (always generated)
-const coreModules = ['Requirements', 'Architecture', 'UX', 'Testing'];
+### Stage 3: Use Cases + Activity Diagrams
 
-// Contextual Modules (inferred)
-const modules = [...coreModules];
+**Goal:** Abstract scenarios into stable functional requirements.
 
-// Project Management module
-if (timeline !== 'Proof-of-concept' && teamSize !== 'Solo developer') {
-  modules.push('Project Management');
-}
+**Invoke:** `domain-analyst` subagent
 
-// Business Analysis module
-if (projectType === 'Enterprise system' ||
-    projectType === 'Academic project' ||
-    primaryUsers === 'External customers') {
-  modules.push('Business Analysis');
-}
+**Order:**
+1. Description of functionality (what the system does)
+2. Use case diagram (actors + use cases)
+3. Activity diagrams (key workflow flows)
 
-// Security module
-if (primaryUsers !== 'Internal team' ||
-    deployment === 'Cloud' ||
-    projectType === 'Web application' ||
-    projectType === 'Mobile app' ||
-    projectType === 'API/Backend service') {
-  modules.push('Security');
-}
+**Produce:**
+- Use case list with brief descriptions
+- Use case diagram (Mermaid)
+- Activity diagrams for top 3-5 workflows (Mermaid)
 
-// Quality module
-if (timeline !== 'Proof-of-concept' && teamSize !== 'Solo developer') {
-  modules.push('Quality');
-}
-
-// Database module
-if (projectType !== 'Library/SDK') {
-  modules.push('Database');
-}
-
-// DevOps module
-if (deployment !== 'Package registry') {
-  modules.push('DevOps');
-}
-```
-
-**Output to User**:
+**Use case template:**
 ```markdown
-Based on your answers, I'll generate the following SDLC modules:
+## UC-001: [Name]
 
-**Core Modules** (always included):
-- Requirements (vision, user stories, NFRs, RTM)
-- Architecture (system design, ADRs, API specs)
-- UX & Design (personas, journeys, mockups)
-- Testing (test strategy, test plan)
+**Actor:** [Primary actor]
+**Goal:** [What the actor wants to achieve]
+**Preconditions:** [Required state before starting]
+**Postconditions:** [State after successful completion]
 
-**Contextual Modules** (inferred from your project):
-[List applicable modules]
+**Main Success Scenario:**
+1. Actor initiates [action]
+2. System validates [condition]
+3. System performs [operation]
+4. System presents [result]
 
-Let's continue with detailed requirements discovery...
+**Extensions:**
+- 2a. Validation fails: System displays error, returns to step 1
+- 3a. Operation fails: System logs error, notifies actor
+
+**Related:** [Other use cases this extends/includes]
 ```
 
-### Phase 1.5: Persona Discovery (CRITICAL - NEW!)
-
-**Goal**: Define 2-5 user personas BEFORE requirements deep-dive
-
-**Why First**: Personas ground all subsequent artifacts (requirements, journeys, evaluation)
-
-**Invocation**: Immediately invoke `ux-prototyper` subagent to create personas
-
-**Subagent Task**:
-```
-Create 2-5 user personas for this project based on the following user groups:
-{{USER_GROUPS_FROM_WIZARD}}
-
-For each persona, define:
-1. Name and role
-2. Goals (top 3)
-3. Pain points
-4. Context of use (environment, devices, constraints)
-5. Capabilities (technical expertise, domain knowledge, cognitive load, time available)
-6. Accessibility needs
-7. Top tasks (3-7 tasks with frequency and importance)
-8. Memorable quote
-
-Update docs/sdlc.state.json with personas array and generate persona documentation in docs/ux/personas/*.md
+**Activity diagram example (Mermaid):**
+```mermaid
+flowchart TD
+    A[Start] --> B{User authenticated?}
+    B -->|No| C[Show login]
+    C --> D[Enter credentials]
+    D --> E{Valid?}
+    E -->|No| C
+    E -->|Yes| F[Create session]
+    B -->|Yes| F
+    F --> G[Show dashboard]
+    G --> H[End]
 ```
 
-**Quick Persona Interview** (if needed to gather info):
+**Checkpoint:** "Here are the use cases and activity diagrams. Review in Storybook → Requirements → Use Cases. Do the workflows accurately represent what needs to happen?"
 
-For EACH persona:
-- "What's their role?" → role
-- "Top 3 goals?" → goals[]
-- "Main pain points?" → painPoints[]
-- "Where/how do they work?" → context{environment, devices, constraints}
-- "Tech expertise?" (novice/intermediate/advanced/expert) → capabilities.technicalExpertise
-- "Accessibility needs?" → accessibility{}
-- "Their 3-7 most important tasks?" → topTasks[]
-- "A quote that captures their attitude?" → quote
+---
 
-**Output**:
-- `docs/sdlc.state.json` updated with personas
-- `docs/ux/personas/<id>.md` for each persona
-- Summary: "✓ Created 3 personas: Sarah (PM), Dev (Engineer), Alex (End User)"
+### Stage 4: Class Diagrams + Sequence Diagrams
 
-**Validation**:
-- ✓ 2-5 personas (not 1, not 10)
-- ✓ Diverse expertise levels
-- ✓ Specific roles (not "Generic User")
-- ✓ At least one has accessibility considerations
+**Goal:** Formalize domain concepts and interactions once workflows are validated.
 
-### Phase 2: Open Questions (Requirements Discovery)
+**Invoke:** `solution-architect` subagent
 
-**IMPORTANT**: Now that personas exist, scope questions to specific personas where relevant.
+**Precondition:** Workflows from Stage 3 are confirmed.
 
-Ask open-ended questions to gather detailed requirements. Use AskUserQuestion for structure, but allow free-form text responses.
+**Order:**
+1. Identify entities from confirmed scenarios and use cases
+2. Class diagram (domain entities, attributes, relationships)
+3. Sequence diagrams (object interactions for key use cases)
 
-#### Core Questions (Always Asked)
+**Produce:**
+- Domain model / class diagram (Mermaid)
+- Sequence diagrams for complex interactions (Mermaid)
 
-**Vision & Problem Statement**:
-```
-Question: "What problem does this project solve? For whom? What's the current pain point?"
-(Free-form text response)
-```
+**Class diagram principles:**
+- Only include entities that appeared in validated workflows
+- Don't invent entities that aren't needed
+- Focus on domain objects, not implementation details
+- Include key attributes and relationships
 
-**Scope & Constraints**:
-```
-Question: "What must be included in the first release? What's explicitly out of scope?"
-(Free-form text response)
-```
+**When to show to client:**
+- Technical stakeholders: Show class + sequence diagrams
+- Business stakeholders: Translate back to scenarios, show entity descriptions in plain language
 
-**Key Stakeholders**:
-```
-Question: "Who are the primary stakeholders and what are their goals?"
-(Free-form text response)
-```
+**Checkpoint:** "Here's the domain model based on our confirmed workflows. Review in Storybook → Architecture → Domain Model. Do these entities and relationships look correct?"
 
-**Core Functionality**:
-```
-Question: "What are the top 3-5 tasks users need to accomplish? What data does the system create, store, modify, or delete?"
-(Free-form text response)
-```
+---
 
-#### Module-Specific Questions
+### Stage 5: ERD / Data Model
 
-Ask these only if the corresponding module is active:
+**Goal:** Lock data structure once entities and workflows are validated.
 
-**If Project Management module active**:
-```
-- "What are the key project milestones?"
-- "What are the biggest risks you foresee?"
-- "Who needs to be kept informed? How often?"
-```
+**Invoke:** `solution-architect` subagent
 
-**If Business Analysis module active**:
-```
-- "Describe the current (as-is) process or workflow"
-- "How would the ideal (to-be) process work?"
-- "What are the root causes of the problem?" (leads to CATWOE)
+**Precondition:** Class diagrams from Stage 4 are confirmed.
+
+**Do NOT start here.** You can maintain a "conceptual entity list" early, but don't detail tables/fields until after scenarios, use cases, and class diagrams have stabilized.
+
+**Produce:**
+- Entity-Relationship Diagram (Mermaid erDiagram)
+- Table definitions with columns and types
+- Relationship cardinality (1:1, 1:N, M:N)
+- Index recommendations
+
+**ERD example (Mermaid):**
+```mermaid
+erDiagram
+    USER ||--o{ ORDER : places
+    ORDER ||--|{ ORDER_LINE : contains
+    PRODUCT ||--o{ ORDER_LINE : "ordered in"
+    USER {
+        int id PK
+        string email UK
+        string name
+        datetime created_at
+    }
+    ORDER {
+        int id PK
+        int user_id FK
+        datetime ordered_at
+        string status
+    }
 ```
 
-**If Security module active**:
-```
-- "What data sensitivity level: public, internal, confidential, or restricted?"
-- "Any compliance requirements? (GDPR, HIPAA, SOC2, ISO27001)"
-- "Authentication needs: public access, login required, SSO, MFA?"
-- "Do users have different permission levels?"
-```
+**If Database module active, also produce:**
+- Migration strategy
+- Indexing recommendations
+- Data volume estimates
 
-**If Quality module active**:
-```
-- "What quality attributes matter most: performance, maintainability, reliability, usability?"
-- "Any code coverage or quality gate requirements?"
-- "Known technical debt or legacy constraints?"
-```
+**Checkpoint:** "Here's the data model. Review in Storybook → Architecture → Data Model. Does this structure support all the workflows we've validated?"
 
-**If Database module active**:
-```
-- "What are the core entities and their relationships?"
-- "Any special data requirements: time-series, geospatial, unstructured?"
-- "Estimated data volume and growth rate?"
-```
+---
 
-**If DevOps module active**:
-```
-- "Preferred cloud provider or hosting approach?"
-- "Scaling expectations: concurrent users, request volume?"
-- "Uptime/SLO requirements?"
-```
+### Stage 6: API Contract
 
-### Phase 3: Closed Questions (Validation & Standards)
+**Goal:** Make integration and implementation unambiguous.
 
-Use AskUserQuestion to confirm understanding and ask about standards:
+**Invoke:** `solution-architect` subagent
 
-```markdown
-**Question 1: Standards & Compliance** (if Security module active)
-Header: "Standards"
-Question: "Do any of these standards apply to your project?"
-Options (multiSelect: true):
-- ISO/IEC 27001 (Information Security)
-- Essential Eight (Australian Cyber Security)
-- SOC 2 (Service Organization Control)
-- WCAG 2.1 AA (Web Accessibility)
-- None - just best practices
+**Precondition:** Data model from Stage 5 is confirmed.
 
-**Question 2: Testing Approach**
-Header: "Testing"
-Question: "What testing strategy will you use?"
-Options:
-- TDD (Test-Driven Development)
-- Test after implementation
-- Minimal testing
-- Comprehensive testing with mutation coverage
+**Produce:**
+- OpenAPI 3.0/3.1 specification
+- Endpoint documentation
+- Request/response examples
+- Error response definitions
+- Authentication requirements
 
-**Question 3: Confirmation**
-Present a summary of what will be generated and ask for confirmation.
-```
+**Show to:**
+- Technical stakeholders: Full OpenAPI spec, Swagger UI
+- Business stakeholders: "Capabilities" view - what the API can do, example requests/responses
 
-### Phase 4: Artifact Generation
+**Checkpoint:** "Here's the API specification. Review in Storybook → Architecture → API Specification (interactive Swagger UI). Do the endpoints cover all required functionality?"
 
-Based on active modules and gathered requirements, invoke specialized subagents:
+---
 
-#### Always Invoked (Core Modules)
+### Stage 7: High-Fidelity Design
 
-```bash
-# Requirements - Use domain-analyst
-Task: "Generate requirements artifacts based on discovery:
-- Vision document
-- User stories with acceptance criteria
-- Non-functional requirements
-- Requirements Traceability Matrix (RTM)
+**Goal:** Create real, interactive UI for validation.
 
-Context: [Provide all answers from discovery]"
+**Invoke:** `ux-prototyper` subagent
 
-# Architecture - Use solution-architect
-Task: "Generate architecture artifacts based on discovery:
-- System design document
-- Architecture Decision Records (ADRs)
-- Data models (ER diagram, class diagram)
-- OpenAPI 3.0 specification
+**Skip low-fidelity.** Generate:
 
-Context: [Provide all answers from discovery]"
+1. **Design tokens** (if not already present)
+   - Color palette (primitives + semantic)
+   - Spacing scale (4px grid)
+   - Typography (families, sizes, weights)
 
-# UX - Use ux-prototyper
-Task: "Generate UX artifacts based on discovery:
-- User personas
-- User journey maps
-- Usability test plan
-- Accessibility checklist
+2. **Component library** (using design tokens)
+   - Primitives: Button, Input, Card, Stack, Text
+   - Feature components: specific to this project's needs
 
-Context: [Provide all answers from discovery]"
-```
+3. **Journey-specific pages/flows**
+   - Build real pages using the component library
+   - Wire up to match the validated workflows
 
-#### Conditionally Invoked (Based on Active Modules)
+4. **Storybook stories**
+   - Interactive, explorable components
+   - Multiple states (default, hover, error, loading, disabled)
 
-```bash
-# If Project Management module
-Task: "Generate PM artifacts:
-- Project charter
-- Work Breakdown Structure
-- Schedule and milestones
-- Risk register (CSV format)
-- Communications plan
+**Why high-fidelity:**
+- Clients can actually click and interact
+- Faster misunderstanding detection than wireframes
+- Design system ensures consistency
+- Components are reusable for implementation
 
-Context: [Provide all answers]"
+**Checkpoint:** "Here are the interactive prototypes. Review in Storybook → UX & Design → Prototypes. Click through the flows - does this match your expectations?"
 
-# If Business Analysis module
-Task: "Generate BA artifacts:
-- Stakeholder map
-- Process models (as-is and to-be in BPMN/Mermaid)
-- CATWOE analysis
-- Root definition
-- Problem statement
+---
 
-Context: [Provide all answers]"
+### Stage 8: Security, Quality, and Supporting Artifacts
 
-# If Security module
-Task: "Generate security artifacts:
+**Goal:** Complete the planning package with security, quality, and PM artifacts.
+
+**Invoke appropriate subagents based on active modules:**
+
+**If Security module:**
+Invoke `security-engineer`:
 - Threat model (STRIDE methodology)
 - Authentication/authorization design
 - Security requirements
-- Security test plan
-- Compliance checklists [if applicable]
+- Compliance checklists (if applicable)
 
-Context: [Provide all answers + compliance standards]"
-
-# If Quality module
-Task: "Generate quality artifacts:
-- Quality model with attributes
+**If Quality module:**
+Invoke `quality-engineer`:
+- Quality model (ISO/IEC 25010 attributes)
 - Code metrics and targets
 - Technical debt register template
 - Code review checklist
-- Refactoring plan
 
-Context: [Provide all answers]"
+**If PM module:**
+Invoke `project-manager`:
+- Project charter (finalized)
+- Work Breakdown Structure
+- Schedule and milestones
+- Risk register
+- Communications plan
+
+**If BA module:**
+Invoke `business-analyst`:
+- Stakeholder map
+- Process models (as-is → to-be)
+- CATWOE analysis
+- Problem statement
+
+**Testing artifacts (always):**
+- Test strategy
+- Test plan aligned with requirements
+
+**Checkpoint:** "I've generated the supporting artifacts. Review the Security, Quality, and PM sections in Storybook. Any concerns?"
+
+---
+
+### Stage 9: Planning Closeout
+
+**Goal:** Package everything for sign-off.
+
+**Produce:**
+- Requirements Traceability Matrix (RTM) linking requirements → design → tests
+- Planning summary document
+- Sign-off checklist (what's in/out, MVP definition, milestones, risks, next steps)
+
+**Show client:**
+```markdown
+## Planning Complete
+
+### What We've Validated
+- ✓ Scenarios and user personas
+- ✓ Use cases and activity diagrams
+- ✓ Domain model (class diagrams)
+- ✓ Data model (ERD)
+- ✓ API specification
+- ✓ Interactive prototypes
+- ✓ Security/Quality/PM artifacts
+
+### Sign-Off Checklist
+- [ ] Scope boundaries agreed
+- [ ] MVP features confirmed
+- [ ] Milestones accepted
+- [ ] Risks acknowledged
+- [ ] Ready to proceed to implementation
+
+### Next Steps
+1. Review all artifacts in Storybook
+2. Complete sign-off checklist
+3. Begin implementation with [recommended first task]
+4. Use `/sdlc:update` after implementing features
+
+### View Planning Hub
+\`\`\`bash
+pnpm dev:storybook
+\`\`\`
 ```
 
-**Important**: Invoke subagents in parallel using multiple Task tool calls in a single message to maximize performance.
+---
 
-### Artifact Organization
+## Artifact Organization
 
-Create artifacts in the docs/ folder structure:
+Create artifacts in the docs/ folder:
 
 ```
 docs/
-├── pm/                     # If PM module active
+├── sdlc.state.json          # Planning state (personas, modules, checkpoints)
+├── pm/                       # Project Management
 │   ├── charter.md
 │   ├── wbs.md
 │   ├── schedule.md
 │   ├── risk-register.csv
 │   └── communications-plan.md
-├── ba/                     # If BA module active
+├── ba/                       # Business Analysis
 │   ├── stakeholder-map.md
 │   ├── process-models/
 │   │   ├── as-is.mmd
 │   │   └── to-be.mmd
 │   ├── catwoe.md
 │   └── problem-statement.md
-├── req/                    # Always created
+├── req/                      # Requirements
 │   ├── vision.md
+│   ├── scenarios/
+│   │   ├── as-is-*.md
+│   │   └── visionary-*.md
+│   ├── use-cases/
+│   │   ├── uc-001-*.md
+│   │   └── use-case-diagram.mmd
+│   ├── activity-diagrams/
+│   │   └── *.mmd
 │   ├── user-stories.md
 │   ├── nfr.md
 │   └── rtm.csv
-├── arch/                   # Always created
+├── arch/                     # Architecture
 │   ├── system-design.md
 │   ├── adr/
-│   │   ├── adr-001-*.md
-│   │   └── adr-002-*.md
-│   ├── data-models/
-│   │   ├── er-diagram.mmd
-│   │   └── class-diagram.mmd
-│   └── api-specs/
+│   │   └── adr-*.md
+│   ├── domain-model/
+│   │   ├── class-diagram.mmd
+│   │   └── sequence-diagrams/
+│   │       └── *.mmd
+│   ├── data-model/
+│   │   ├── erd.mmd
+│   │   └── tables.md
+│   └── api/
 │       └── openapi.yaml
-├── security/               # If Security module active
+├── security/                 # Security
 │   ├── threat-model.md
 │   ├── auth-design.md
-│   ├── security-requirements.md
 │   └── compliance/
-│       └── [standard-checklists].md
-├── quality/                # If Quality module active
+├── quality/                  # Quality
 │   ├── quality-model.md
 │   ├── metrics.md
 │   └── tech-debt-register.md
-├── test/                   # Always created
+├── test/                     # Testing
 │   ├── test-strategy.md
 │   └── test-plan.md
-└── ux/                     # Always created
-    ├── personas.md
+└── ux/                       # UX & Design
+    ├── personas/
+    │   └── *.md
+    ├── scenarios/
+    │   └── *.md
     ├── journeys/
-    │   └── journey-*.mmd
-    ├── usability-test-plan.md
-    └── accessibility-checklist.md
+    │   └── *.mmd
+    └── prototypes/
+        └── *.mdx
 ```
 
-### Generate MDX Pages
+---
 
-For each markdown artifact in docs/, create a corresponding MDX page in packages/planning-hub/src/docs/:
+## State Management
 
-```bash
-# Read from docs/req/vision.md
-# Write to packages/planning-hub/src/docs/Requirements/Vision.mdx
+Track planning progress in `docs/sdlc.state.json`:
 
-# Template:
-import { Meta } from '@storybook/blocks';
-
-<Meta title="Requirements/Vision" />
-
-[Content from docs/req/vision.md]
+```json
+{
+  "projectName": "my-project",
+  "startedAt": "2026-01-25T10:00:00Z",
+  "modules": {
+    "core": ["Requirements", "Architecture", "UX", "Testing"],
+    "contextual": ["Security", "Database", "DevOps"]
+  },
+  "personas": [
+    {
+      "id": "persona-1",
+      "name": "Sarah",
+      "role": "Project Manager",
+      "confirmed": true
+    }
+  ],
+  "checkpoints": {
+    "kickoff": { "status": "confirmed", "confirmedAt": "..." },
+    "scenarios": { "status": "confirmed", "confirmedAt": "..." },
+    "useCases": { "status": "in-progress" },
+    "domainModel": { "status": "pending" },
+    "dataModel": { "status": "pending" },
+    "apiContract": { "status": "pending" },
+    "prototypes": { "status": "pending" },
+    "supporting": { "status": "pending" },
+    "signoff": { "status": "pending" }
+  },
+  "artifacts": [
+    { "path": "docs/req/scenarios/visionary-checkout.md", "stage": "scenarios" }
+  ]
+}
 ```
 
-**MDX Page Mapping**:
+Use this to:
+- Resume planning if interrupted
+- Track what's been confirmed
+- Know which stages are complete
+
+---
+
+## Subagent Invocation
+
+When invoking subagents, provide:
+1. Full context from discovery
+2. Previously confirmed artifacts (so they build on validated work)
+3. Specific deliverables expected
+4. Output location
+
+Example:
 ```
-docs/pm/* → Requirements/PM/*
-docs/ba/* → Requirements/BA/*
-docs/req/* → Requirements/*
-docs/arch/* → Architecture/*
-docs/security/* → Security/*
-docs/quality/* → Quality/*
-docs/test/* → Testing/*
-docs/ux/* → UX & Design/*
-docs/db/* → Database/*
-docs/ops/* → DevOps/*
+Task: solution-architect
+Prompt: |
+  Generate the domain model based on these confirmed artifacts:
+
+  **Confirmed Scenarios:** [summary]
+  **Confirmed Use Cases:** [summary]
+
+  Produce:
+  1. Class diagram (Mermaid) → docs/arch/domain-model/class-diagram.mmd
+  2. Sequence diagrams for UC-001, UC-002, UC-003 → docs/arch/domain-model/sequence-diagrams/
+
+  Entities must come from the validated workflows. Don't invent entities.
 ```
 
-### Update Navigation
-
-After generating all artifacts, check if any navigation updates are needed in `.storybook/preview.ts`.
-
-### Phase 5: Output & Next Steps
-
-Provide a comprehensive summary:
-
-```markdown
-✓ Planning artifacts generated successfully!
-
-## Generated Modules
-
-### Core Modules
-- **Requirements**: Vision, user stories, NFRs, RTM
-- **Architecture**: System design, [X] ADRs, data models, API spec
-- **UX & Design**: Personas, [X] user journeys, usability test plan
-- **Testing**: Test strategy, test plan
-
-### Contextual Modules
-[List generated modules with key deliverables]
-
-## Files Created
-
-[List all created files with paths]
-
-## View in Planning Hub
-
-Start Storybook to view all artifacts:
-
-\`\`\`bash
-pnpm dev:storybook
-\`\`\`
-
-Then navigate to:
-- Requirements section (vision, user stories)
-- Architecture section (ADRs, API spec)
-- [Other sections based on modules]
-
-## Next Steps
-
-1. **Review artifacts** in Storybook
-2. **Refine requirements** if needed (edit docs/ files)
-3. **Start implementation** with [recommended first task]
-4. **Update progress** with `/sdlc:update` after implementation
-
-## Traceability
-
-Requirements Traceability Matrix (RTM) has been created at:
-`docs/req/rtm.csv`
-
-This links requirements → design → tests for full traceability.
-
-## Recommended First Task
-
-Based on your project, I recommend starting with:
-[Suggest specific implementation task based on discovery]
-```
+---
 
 ## Error Handling
 
 ### Project Not Initialized
 
-If `/sdlc:init` hasn't been run:
-
 ```markdown
-✗ SDLC project structure not found
+✗ SDLC project structure not found.
 
-Please run `/sdlc:init` first to set up the project structure.
-
+Run `/sdlc:init` first:
 \`\`\`bash
-/sdlc:init
+/sdlc:init my-project
 \`\`\`
 ```
 
-EXIT without proceeding.
-
-### Subagent Failures
-
-If any subagent fails:
+### Client Rejects Artifact
 
 ```markdown
-⚠ Warning: [subagent-name] failed to generate artifacts
+I understand. Let me revise the [artifact].
 
-Error: [error message]
+What specifically needs to change?
+- [List specific issues raised]
 
-You can:
-1. Continue with other artifacts
-2. Retry the failed subagent
-3. Manually create the missing artifacts in docs/[module]/
-
-Proceed with available artifacts? (y/n)
+I'll update and show you the revised version.
 ```
 
-### Invalid Responses
+Then iterate until confirmed.
 
-If user provides unclear or incomplete responses:
+### Subagent Failure
 
 ```markdown
-⚠ Response unclear or incomplete
+⚠ [subagent] encountered an issue generating [artifact].
 
-Could you please provide more details about: [specific question]
+Options:
+1. Retry with adjusted parameters
+2. Generate a simpler version manually
+3. Skip this artifact for now and continue
 
-For example:
-[Provide example answer]
+What would you prefer?
 ```
 
-## Best Practices
+---
 
-1. **Diamond structure**: Start focused (closed questions), expand (open questions), refocus (confirmation)
-2. **Progressive disclosure**: Only ask module-specific questions if that module is active
-3. **Parallel subagents**: Invoke multiple subagents concurrently for performance
-4. **Clear communication**: Explain which modules will be generated and why
-5. **Traceability**: Always generate RTM to link requirements to design to tests
-6. **Context preservation**: Provide full discovery context to each subagent
+## Flexibility Guidelines
 
-## Variables
+**You may:**
+- Ask more questions if requirements are unclear
+- Iterate on any stage multiple times
+- Show multiple artifacts together when it helps
+- Skip stages that don't apply (e.g., no ERD for a library)
+- Revisit earlier stages if new information emerges
+- Generate artifacts in parallel when they don't depend on each other
 
-When generating artifacts, use:
+**You should:**
+- Always validate scenarios before class diagrams
+- Always validate class diagrams before ERD
+- Always confirm with client before proceeding to dependent work
+- Adapt formality to project type (POC vs enterprise)
 
-- `{{PROJECT_NAME}}` - From project root package.json
-- `{{DATE}}` - Current date (YYYY-MM-DD)
-- `{{AUTHOR}}` - User name or "Planning Team"
-- `{{STATUS}}` - "Planning" for new artifacts
+**You should not:**
+- Generate ERD before use cases are confirmed
+- Skip client validation checkpoints
+- Generate all artifacts in one batch without feedback
+- Invent entities not present in validated workflows
+
+---
 
 ## Tool Usage
 
-- **AskUserQuestion**: All discovery questions (both closed and open)
+- **AskUserQuestion**: Discovery questions and validation checkpoints
 - **Task**: Invoke specialized subagents
-- **Write**: Create MDX pages and markdown artifacts
-- **Read**: Read existing artifacts and templates
+- **Write**: Create artifacts and state file
+- **Read**: Read existing artifacts, templates, state
 - **Glob**: Find existing documentation
-- **Grep**: Search for existing content
-- **Bash**: Run git commands, create directories
+- **Grep**: Search artifact content
+- **Bash**: Create directories, git operations
+
+---
 
 ## Success Criteria
 
-- [ ] Project type classified
-- [ ] All discovery questions answered
-- [ ] Modules inferred correctly
-- [ ] All subagents invoked successfully
-- [ ] Artifacts created in docs/ folder
-- [ ] MDX pages generated in planning-hub
-- [ ] RTM created
-- [ ] User provided with clear next steps
-
-That's it! You've successfully run the planning wizard and generated comprehensive SDLC artifacts.
+Planning is complete when:
+- [ ] Kickoff confirmed (scope, constraints, stakeholders)
+- [ ] Scenarios confirmed (as-is, visionary)
+- [ ] Use cases + activity diagrams confirmed
+- [ ] Domain model (class diagrams) confirmed
+- [ ] Data model (ERD) confirmed
+- [ ] API contract confirmed
+- [ ] High-fidelity prototypes reviewed
+- [ ] Supporting artifacts generated (security, quality, PM as applicable)
+- [ ] RTM created linking requirements → design → tests
+- [ ] Client sign-off obtained

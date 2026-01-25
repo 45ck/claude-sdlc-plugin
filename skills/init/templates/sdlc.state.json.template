@@ -3,30 +3,81 @@
   "version": "1.0.0",
   "project": {
     "name": "{{PROJECT_NAME}}",
-    "type": "{{PROJECT_TYPE}}",
-    "description": "{{PROJECT_DESCRIPTION}}",
+    "type": null,
+    "description": null,
     "createdAt": "{{CREATED_AT}}",
     "updatedAt": "{{UPDATED_AT}}"
   },
+  "planning": {
+    "startedAt": null,
+    "completedAt": null,
+    "currentStage": null
+  },
   "modules": {
-    "pm": {{PM_ENABLED}},
-    "ba": {{BA_ENABLED}},
-    "requirements": true,
-    "architecture": true,
-    "security": {{SECURITY_ENABLED}},
-    "quality": {{QUALITY_ENABLED}},
-    "testing": true,
-    "ux": true,
-    "database": {{DB_ENABLED}},
-    "ops": {{OPS_ENABLED}}
+    "core": ["requirements", "architecture", "ux", "testing"],
+    "contextual": []
+  },
+  "checkpoints": {
+    "kickoff": {
+      "status": "pending",
+      "confirmedAt": null,
+      "notes": null
+    },
+    "scenarios": {
+      "status": "pending",
+      "confirmedAt": null,
+      "notes": null
+    },
+    "useCases": {
+      "status": "pending",
+      "confirmedAt": null,
+      "notes": null
+    },
+    "domainModel": {
+      "status": "pending",
+      "confirmedAt": null,
+      "notes": null
+    },
+    "dataModel": {
+      "status": "pending",
+      "confirmedAt": null,
+      "notes": null
+    },
+    "apiContract": {
+      "status": "pending",
+      "confirmedAt": null,
+      "notes": null
+    },
+    "prototypes": {
+      "status": "pending",
+      "confirmedAt": null,
+      "notes": null
+    },
+    "supporting": {
+      "status": "pending",
+      "confirmedAt": null,
+      "notes": null
+    },
+    "signoff": {
+      "status": "pending",
+      "confirmedAt": null,
+      "notes": null
+    }
   },
   "personas": [],
+  "scenarios": {
+    "asIs": [],
+    "visionary": [],
+    "evaluation": []
+  },
+  "useCases": [],
   "journeys": [],
   "requirements": {
     "functional": [],
     "nonFunctional": [],
     "traceabilityMatrix": []
   },
+  "artifacts": [],
   "evaluation": {
     "participants": [],
     "sessions": [],

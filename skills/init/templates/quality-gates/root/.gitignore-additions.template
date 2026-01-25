@@ -1,0 +1,15 @@
+# Quality tooling
+coverage/
+.nyc_output/
+*.lcov
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

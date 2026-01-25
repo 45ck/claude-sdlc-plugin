@@ -61,6 +61,8 @@ Create the following directory structure:
 ```
 .
 ├── docs/                           # Source artifacts (external to packages)
+│   ├── sdlc.state.json            # Planning state (checkpoints, personas, artifacts)
+│   ├── sdlc.state.schema.json     # JSON schema for state validation
 │   ├── pm/                         # Project Management (created on demand)
 │   ├── ba/                         # Business Analysis (created on demand)
 │   ├── req/                        # Requirements (always created)
@@ -101,6 +103,23 @@ docs/test/README.md
 docs/ux/README.md
 ```
 
+**Create SDLC State File**:
+
+Copy `${CLAUDE_PLUGIN_ROOT}/skills/init/templates/sdlc.state.json.template` to `docs/sdlc.state.json` with variable substitution:
+- `{{PROJECT_NAME}}` - Project name
+- `{{CREATED_AT}}` - Current ISO datetime
+- `{{UPDATED_AT}}` - Current ISO datetime
+
+Also copy `${CLAUDE_PLUGIN_ROOT}/skills/init/templates/sdlc.state.schema.json.template` to `docs/sdlc.state.schema.json`.
+
+This state file tracks:
+- Planning checkpoints (kickoff, scenarios, useCases, domainModel, dataModel, apiContract, prototypes, supporting, signoff)
+- User personas
+- Scenarios (as-is, visionary, evaluation)
+- Use cases
+- Requirements and traceability
+- Generated artifacts
+
 ### 4. Copy Template Files
 
 Use Read tool to read templates from `${CLAUDE_PLUGIN_ROOT}/skills/init/templates/` and Write tool to create files with variable substitution:
@@ -114,6 +133,56 @@ Use Read tool to read templates from `${CLAUDE_PLUGIN_ROOT}/skills/init/template
 1. `pnpm-workspace.yaml` (from pnpm-workspace.yaml.template)
 2. `package.json` (from package.json.template)
 3. `.gitignore` (from .gitignore.template)
+
+### 4.5. Set Up Quality Gates
+
+**Create root-level quality configuration**:
+
+1. Read templates from `${CLAUDE_PLUGIN_ROOT}/skills/init/templates/quality-gates/root/` and write to project root with variable substitution:
+   - `tsconfig.base.json` (shared TypeScript strict config)
+   - `eslint.config.mjs` (complexity + maintainability rules)
+   - `vitest.workspace.ts` (multi-package test config)
+   - `.dependency-cruiser.js` (circular dependency detection)
+   - `knip.json` (dead code detection, workspace-aware)
+   - `.prettierrc.json` (code formatting)
+   - `.editorconfig` (editor consistency)
+   - `.prettierignore` (formatting ignore patterns)
+
+2. Create `.husky/` directory and hooks:
+   ```bash
+   mkdir -p .husky
+   ```
+
+   Create `.husky/pre-commit` (from husky-pre-commit.template)
+   Create `.husky/pre-push` (from husky-pre-push.template)
+
+3. Create `.github/workflows/` directory and CI configuration:
+   ```bash
+   mkdir -p .github/workflows
+   ```
+
+   Create `.github/workflows/ci.yml` (from ci.yml.template)
+
+4. Create `scripts/` directory and validation script:
+   ```bash
+   mkdir -p scripts
+   ```
+
+   Create `scripts/validate-packages.js` (from validate-packages.js.template)
+
+5. Create `docs/development/` directory and documentation:
+   ```bash
+   mkdir -p docs/development
+   ```
+
+   Create `CONTRIBUTING.md` (from CONTRIBUTING.md.template)
+   Create `docs/development/QUALITY_STANDARDS.md` (from quality-gates/docs/QUALITY_STANDARDS.md.template)
+   Create `docs/development/PACKAGE_CREATION.md` (from quality-gates/docs/PACKAGE_CREATION.md.template)
+
+6. Append quality-specific entries to `.gitignore` (from .gitignore-additions.template):
+   ```bash
+   # Read .gitignore-additions.template and append to existing .gitignore
+   ```
 
 ### 5. Initialize Storybook Package
 
@@ -155,6 +224,60 @@ Create `packages/planning-hub/package.json`:
   }
 }
 ```
+
+### 5.5. Add Quality Configs to planning-hub
+
+1. Create `packages/planning-hub/tsconfig.json`:
+   ```json
+   {
+     "extends": "../../tsconfig.base.json",
+     "compilerOptions": {
+       "jsx": "react-jsx",
+       "outDir": "dist"
+     },
+     "include": ["src", "scripts", ".storybook"]
+   }
+   ```
+
+2. Create `packages/planning-hub/vitest.config.ts`:
+   ```typescript
+   import { defineConfig } from 'vitest/config';
+   import react from '@vitejs/plugin-react';
+
+   export default defineConfig({
+     plugins: [react()],
+     test: {
+       globals: false,
+       environment: 'jsdom',
+       coverage: {
+         provider: 'v8',
+         reporter: ['text', 'html'],
+         include: ['src/**/*.{ts,tsx}'],
+         exclude: ['src/**/*.stories.tsx', 'src/**/*.test.tsx', 'scripts/**'],
+         thresholds: {
+           lines: 95,
+           functions: 95,
+           statements: 95,
+           branches: 90,
+           perFile: true,
+         },
+       },
+     },
+   });
+   ```
+
+3. Update `packages/planning-hub/package.json` to add quality scripts:
+   Merge these scripts into the existing scripts:
+   ```json
+   {
+     "scripts": {
+       "typecheck": "tsc --noEmit",
+       "lint": "eslint . --max-warnings=0",
+       "test": "vitest",
+       "test:coverage": "vitest run --coverage"
+     }
+   }
+   ```
 
 ### 6. Create Storybook Configuration
 
@@ -444,6 +567,63 @@ export const tokens = {
 };
 ```
 
+### 9.5. Add Quality Configs to ui
+
+1. Create `packages/ui/tsconfig.json`:
+   ```json
+   {
+     "extends": "../../tsconfig.base.json",
+     "compilerOptions": {
+       "jsx": "react-jsx",
+       "outDir": "dist",
+       "declaration": true,
+       "declarationMap": true
+     },
+     "include": ["src"]
+   }
+   ```
+
+2. Create `packages/ui/vitest.config.ts`:
+   ```typescript
+   import { defineConfig } from 'vitest/config';
+   import react from '@vitejs/plugin-react';
+
+   export default defineConfig({
+     plugins: [react()],
+     test: {
+       globals: false,
+       environment: 'jsdom',
+       coverage: {
+         provider: 'v8',
+         reporter: ['text', 'html'],
+         include: ['src/**/*.ts', 'src/**/*.tsx'],
+         exclude: ['src/**/*.stories.tsx', 'src/**/*.test.tsx'],
+         thresholds: {
+           lines: 95,
+           functions: 95,
+           statements: 95,
+           branches: 90,
+           perFile: true,
+         },
+       },
+     },
+   });
+   ```
+
+3. Update `packages/ui/package.json` to add quality scripts:
+   Merge these scripts into the existing package.json:
+   ```json
+   {
+     "scripts": {
+       "typecheck": "tsc --noEmit",
+       "lint": "eslint . --max-warnings=0",
+       "test": "vitest",
+       "test:coverage": "vitest run --coverage",
+       "build": "tsc && vite build"
+     }
+   }
+   ```
+
 ### 10. Initialize Git Repository
 
 If not already a git repository:
@@ -474,6 +654,14 @@ pnpm install
 
 **IMPORTANT**: This may take several minutes. Inform the user and wait for completion.
 
+After installation completes, initialize Husky:
+
+```bash
+pnpm exec husky init
+```
+
+This creates the `.husky/_/` internals. The pre-commit and pre-push hooks were already created in step 4.5.
+
 ### 12. Verify Installation
 
 Run basic checks:
@@ -484,6 +672,22 @@ pnpm list --depth 0
 
 # Check if Storybook can build (quick validation)
 cd packages/planning-hub && pnpm exec storybook --version
+```
+
+Verify quality tooling:
+
+```bash
+# Validate package configurations
+pnpm run validate:packages
+
+# Check TypeScript compilation
+pnpm run typecheck
+
+# Verify linting setup
+pnpm run lint
+
+# Check formatting
+pnpm run format
 ```
 
 ## Output
@@ -645,9 +849,15 @@ Use bash `sed` or manual string replacement in the LLM context.
 - [ ] UI package created
 - [ ] Documentation structure created
 - [ ] Templates copied and variables substituted
+- [ ] Quality gates configured (TypeScript, ESLint, Vitest, etc.)
+- [ ] Git hooks configured (Husky with pre-commit and pre-push)
+- [ ] Package validation script created
+- [ ] Quality documentation created (CONTRIBUTING.md, QUALITY_STANDARDS.md)
 - [ ] Git repository initialized (if git available)
 - [ ] Dependencies installed successfully
+- [ ] Husky initialized
+- [ ] Quality checks passing
 - [ ] Initial commit created
 - [ ] User provided with next steps
 
-That's it! You've successfully initialized an SDLC monorepo project.
+That's it! You've successfully initialized an SDLC monorepo project with comprehensive quality gates.
