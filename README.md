@@ -36,7 +36,7 @@ claude --plugin-dir "/path/to/claude-sdlc-plugin"
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/YOUR_USERNAME/claude-sdlc-plugin.git
+git clone https://github.com/45ck/claude-sdlc-plugin.git
 ```
 
 2. Add to your Claude Code user settings (`~/.claude/settings.json`):
