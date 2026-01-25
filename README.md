@@ -1,547 +1,204 @@
-# SDLC Plugin for Claude Code
+# Claude SDLC Plugin
 
-Comprehensive SDLC workflow automation plugin that scaffolds monorepo projects with a Storybook-based planning hub covering the full software development lifecycle.
+A Claude Code plugin that automates software development lifecycle (SDLC) workflows with an interactive Storybook-based planning hub.
 
-## Overview
+**Generate professional SDLC artifacts with AI-assisted iterative planning.**
 
-The SDLC plugin helps teams and students implement industry-standard software engineering practices by automating the creation and management of SDLC artifacts. It generates structured documentation across:
+## What It Does
 
-- **Project Management** - Charter, WBS, schedule, risk register, communications plan
-- **Business Analysis** - Stakeholder maps, process models, CATWOE analysis, problem statements
-- **Requirements** - Vision, SRS/PRD, user stories, NFRs, requirements traceability matrix
-- **Architecture** - System design, ADRs, data models, API specifications
-- **Security** - Threat models, auth design, security test plans, compliance checklists
-- **Quality** - Quality models, metrics, tech debt registers, refactoring plans
-- **Testing & Verification** - Test strategy, test plans, mutation testing
-- **UX & Design** - Personas, user journeys, usability test plans, accessibility checklists
-- **Database** - Schema design, migrations, indexing strategy
-- **DevOps** - Deployment architecture, CI/CD plans, observability strategy
+The SDLC plugin scaffolds complete software projects with proper documentation, then guides you through an iterative planning process that validates each stage with you before proceeding.
 
-## Features
+### Three Commands
 
-### Three Core Skills
+| Command | Description |
+|---------|-------------|
+| `/sdlc:init` | Scaffold a monorepo with Storybook planning hub, design system, and quality tooling |
+| `/sdlc:plan` | Interactive planning wizard - generates artifacts in dependency order with validation |
+| `/sdlc:update` | Sync artifacts with implementation progress from git history |
 
-- **`/sdlc:init`** - Scaffolds monorepo with Storybook planning hub, design system, and documentation structure
-- **`/sdlc:plan`** - **Iterative planning with client validation** - generates artifacts in proper dependency order (scenarios → workflows → models → data → API → design), validating each stage with the client before proceeding
-- **`/sdlc:update`** - Syncs artifacts with implementation status, updates traceability matrices
+### What Gets Generated
 
-### Iterative Planning Philosophy
-
-The plugin follows industry-standard SDLC practices with an iterative, client-facing approach:
-
-- **Concrete before abstract** - Start with scenarios and what users do, then model structure
-- **Validate incrementally** - Generate an artifact, show to client, get feedback, then proceed
-- **High-fidelity from the start** - Skip low-fi wireframes; generate real, interactive components
-- **Proper dependency ordering** - Scenarios → Use Cases → Class Diagrams → ERD → API → Design
-
-### Specialized Subagents
-
-- **domain-analyst** - Business requirements and user story expert
-- **solution-architect** - Technical architecture and API design expert (uses Opus model)
-- **ux-prototyper** - UX design and Storybook component story expert
-- **project-manager** - Project management and planning expert
-- **business-analyst** - Business analysis and process modeling expert
-- **security-engineer** - Security design and threat modeling expert
-- **quality-engineer** - Software quality and metrics expert
-
-### Intelligent Module Inference
-
-The plugin automatically determines which SDLC modules to generate based on your project type:
-
-| Project Type | Generated Modules |
-|--------------|-------------------|
-| Web application | Core + PM + BA + Security + Quality + DB + DevOps |
-| Mobile app | Core + PM + Security + Quality + DevOps |
-| API/Backend service | Core + PM + Security + Quality + DB + DevOps |
-| Library/SDK | Core + Quality (lighter workflow) |
-| Enterprise system | All modules + compliance checklists |
-| Academic project | All modules (FYP-ready) |
-
-### Storybook Planning Hub
-
-Interactive documentation site with:
-- Unified navigation across all SDLC phases
-- Live Mermaid diagram rendering (UML, BPMN, flowcharts)
-- Interactive API documentation (OpenAPI/Swagger UI)
-- Requirements traceability matrix
-- Design system with tokens and primitives
-- Auto-reload on artifact changes
+- **Requirements** - User stories, acceptance criteria, traceability matrix
+- **Architecture** - System design, ADRs, OpenAPI specs, data models
+- **UX Design** - Personas, user journeys, interactive prototypes
+- **Quality** - Test plans, security reviews, code quality configs
+- **Project Management** - Charter, WBS, risk register, schedules
 
 ## Installation
 
-Install the plugin by adding it to your Claude Code configuration:
+### Quick Start (Session Only)
 
 ```bash
-claude code --plugin-dir="D:\Visual Studio Projects\sdlc-plugin"
+claude --plugin-dir "/path/to/claude-sdlc-plugin"
 ```
 
-Or add to your `.claude/config.json`:
+### Global Installation
 
+1. Clone the repository:
+```bash
+git clone https://github.com/YOUR_USERNAME/claude-sdlc-plugin.git
+```
+
+2. Add to your Claude Code user settings (`~/.claude/settings.json`):
 ```json
 {
-  "plugins": ["D:\\Visual Studio Projects\\sdlc-plugin"]
+  "enabledPlugins": {
+    "sdlc@sdlc-local": true
+  },
+  "extraKnownMarketplaces": {
+    "sdlc-local": {
+      "url": "file:///path/to/claude-sdlc-plugin/.claude-plugin/marketplace.json"
+    }
+  }
 }
 ```
 
-## Prerequisites
+3. Restart Claude Code - the plugin is now available globally.
 
-- **pnpm** - Required for monorepo workspace management
-- **Git** - For version control
+### Prerequisites
+
+- **Claude Code** v2.1+
+- **pnpm** - For monorepo workspace management
 - **Node.js 18+** - For Storybook and build tools
+- **Git** - For version control
 
-## Quick Start
+## Usage
 
-### 1. Initialize a New Project
+### 1. Initialize a Project
 
 ```bash
-/sdlc:init my-project
+/sdlc:init my-app
 ```
 
-This creates:
-- Monorepo structure with pnpm workspace
-- Storybook planning hub
-- Design system package
-- Git repository with initial commit
-- Sample documentation templates
+Creates:
+```
+my-app/
+├── docs/                    # SDLC artifacts
+├── packages/
+│   ├── planning-hub/        # Storybook site
+│   └── ui/                  # Design system
+├── pnpm-workspace.yaml
+├── package.json
+└── ... (quality configs)
+```
 
-### 2. Install Dependencies
+### 2. Start the Planning Hub
 
 ```bash
-cd my-project
+cd my-app
 pnpm install
-```
-
-### 3. Start Planning Hub
-
-```bash
 pnpm dev:storybook
 ```
 
-Opens Storybook at http://localhost:6006
+Opens at http://localhost:6006
 
-### 4. Plan Your First Feature
+### 3. Plan Your Feature
 
 ```bash
 /sdlc:plan
 ```
 
-This runs an **iterative planning wizard** that:
-- Classifies your project type and infers which SDLC modules to generate
-- Generates artifacts in proper dependency order (scenarios → use cases → models → ERD → API → design)
-- **Validates each stage with you** before proceeding to dependent work
-- Shows artifacts in Storybook for interactive review
-- Tracks progress in `docs/sdlc.state.json` (can resume if interrupted)
+The wizard walks you through:
 
-### 5. Sync Implementation Progress
+1. **Kickoff** - Project scope and constraints
+2. **Scenarios** - As-is and visionary user scenarios
+3. **Use Cases** - Activity diagrams and workflows
+4. **Domain Model** - Class diagrams and entities
+5. **Data Model** - ERD and database schema
+6. **API Contract** - OpenAPI specification
+7. **Prototypes** - Interactive Storybook components
+8. **Sign-off** - Requirements traceability matrix
 
-After implementing features:
+Each stage is validated with you before proceeding.
+
+### 4. Track Implementation
 
 ```bash
 /sdlc:update
 ```
 
-This:
-- Analyzes git commits for completed work
-- Updates artifact status and checkboxes
-- Marks completed items in requirements traceability matrix
-- Generates progress reports
-
-## Skills Reference
-
-### `/sdlc:init [project-name]`
-
-**Purpose**: Initialize a new SDLC monorepo project
-
-**Arguments**:
-- `project-name` (optional) - Name of the project
-
-**What It Creates**:
-- `pnpm-workspace.yaml` - Monorepo configuration
-- `packages/planning-hub/` - Storybook documentation site
-- `packages/ui/` - Design system package
-- `docs/` - Source artifacts directory structure
-- `.git/` - Git repository with initial commit
-
-**Example**:
-```bash
-/sdlc:init ecommerce-platform
-```
-
-### `/sdlc:plan`
-
-**Purpose**: Iterative planning with client validation at each stage
-
-**Core Principles**:
-- **Iterate, don't batch** - Generate artifact → show client → get feedback → proceed
-- **Concrete before abstract** - Scenarios first, then models
-- **High-fidelity design** - Skip wireframes, use design system for real components
-
-**Planning Stages** (each validated before proceeding):
-
-| Stage | Artifacts | Checkpoint |
-|-------|-----------|------------|
-| 0. Kickoff | Charter, scope, constraints | "Does this capture the project scope?" |
-| 1. Requirements | Tasks, events, initial entities | "Is this what you need?" |
-| 2. Scenarios | As-is scenarios, visionary scenarios, personas | "Review in Storybook - do these match reality?" |
-| 3. Use Cases | Use case diagram, activity diagrams | "Do these workflows look correct?" |
-| 4. Domain Model | Class diagrams, sequence diagrams | "Are these the right entities?" |
-| 5. Data Model | ERD, table definitions | "Does this structure support our workflows?" |
-| 6. API Contract | OpenAPI specification | "Check Swagger UI - all endpoints covered?" |
-| 7. Prototypes | High-fi components, Storybook stories | "Click through - does this match expectations?" |
-| 8. Supporting | Security, Quality, PM artifacts | "Any concerns with these?" |
-| 9. Signoff | RTM, planning summary | "Ready to proceed to implementation?" |
-
-**State Tracking**: Progress is saved to `docs/sdlc.state.json` allowing planning to resume if interrupted.
-
-**Example**:
-```bash
-/sdlc:plan
-# Iterative wizard with validation at each stage...
-```
-
-### `/sdlc:update`
-
-**Purpose**: Synchronize artifacts with implementation status
-
-**What It Does**:
-- Scans codebase for implementations
-- Checks git history for related commits
-- Updates artifact status and checkboxes
-- Marks completed items in RTM
-- Adds implementation notes
-- Generates progress reports
-
-**Example**:
-```bash
-/sdlc:update
-```
-
-## Subagents
-
-### domain-analyst
-
-**Specialization**: Business requirements and domain modeling
-
-**Creates**:
-- User stories (INVEST principles)
-- Domain glossary (ubiquitous language)
-- Acceptance criteria
-- Business value documentation
-
-**Model**: Sonnet (cost-effective for requirements work)
-
-### solution-architect
-
-**Specialization**: Technical architecture and system design
-
-**Creates**:
-- Architecture Decision Records (ADRs)
-- OpenAPI 3.0 specifications
-- System architecture diagrams (Mermaid)
-- Data models (ER diagrams, class diagrams)
-- Technical task breakdowns
-
-**Model**: Opus (complex technical reasoning)
-
-**Special Features**:
-- Auto-validates OpenAPI specs via hook
-- Uses SOLID principles and 12-Factor App methodology
-- Security-by-design approach
-
-### ux-prototyper
-
-**Specialization**: User experience and component design
-
-**Creates**:
-- Storybook component stories (MDX)
-- User flow diagrams (Mermaid)
-- Design tokens (colors, spacing, typography)
-- Accessibility documentation (WCAG 2.1 AA)
-
-**Model**: Sonnet
-**Permission Mode**: acceptEdits (optimized for UI work)
-
-### project-manager
-
-**Specialization**: Project planning and coordination
-
-**Creates**:
-- Project charter
-- Work Breakdown Structure (WBS)
-- Schedule and milestones
-- Risk register (CSV format)
-- Communications plan
-- Closure checklist
-
-**Model**: Sonnet
-
-### business-analyst
-
-**Specialization**: Business analysis and process improvement
-
-**Creates**:
-- Stakeholder maps
-- Process models (as-is/to-be BPMN)
-- CATWOE analysis
-- Root definitions (Soft Systems Methodology)
-- Rich pictures
-- Problem statements
-
-**Model**: Sonnet
-
-### security-engineer
-
-**Specialization**: Security architecture and threat modeling
-
-**Creates**:
-- Threat models (STRIDE methodology)
-- Authentication/authorization design
-- Security requirements
-- Security test plans (OWASP/WSTG)
-- Compliance checklists (ISO 27001, Essential Eight, WCAG)
-
-**Model**: Sonnet
-
-### quality-engineer
-
-**Specialization**: Software quality assurance
-
-**Creates**:
-- Quality models and attributes
-- Code metrics and targets
-- Technical debt registers
-- Code review checklists
-- Static analysis configuration
-- Refactoring plans
-
-**Model**: Sonnet
-
-## Hooks
-
-### PostToolUse: Auto-Formatting
-
-**Trigger**: After Write or Edit tool operations
-
-**Script**: `scripts/format.sh`
-
-**Purpose**: Automatically format files with Prettier
-
-**Supported File Types**:
-- JavaScript/TypeScript (.js, .ts, .jsx, .tsx)
-- JSON (.json)
-- Markdown/MDX (.md, .mdx)
-- YAML (.yaml, .yml)
-
-**Behavior**: Non-blocking (exit 0) - always succeeds even if Prettier not installed
-
-### PreToolUse: OpenAPI Validation
-
-**Trigger**: Before Write or Edit operations
-
-**Script**: `scripts/validate-openapi.sh`
-
-**Purpose**: Validate OpenAPI specifications before writing
-
-**Behavior**: Blocking (exit 2 on validation failure) - prevents invalid specs
-
-### SessionStart: pnpm Check
-
-**Trigger**: When Claude Code session starts
-
-**Script**: `scripts/helpers/check-pnpm.sh`
-
-**Purpose**: Verify pnpm is installed
-
-**Behavior**: Non-blocking (exit 0) - warns if not installed but continues
-
-## Project Structure
-
-### Plugin Directory
+Scans git commits and updates artifact status.
+
+## Specialized Agents
+
+The plugin includes expert subagents for different SDLC disciplines:
+
+| Agent | Expertise |
+|-------|-----------|
+| `domain-analyst` | User stories, domain glossary, acceptance criteria |
+| `solution-architect` | ADRs, OpenAPI specs, system design |
+| `ux-prototyper` | Personas, user flows, Storybook components |
+| `project-manager` | Charter, WBS, risk register, schedules |
+| `business-analyst` | Process models, stakeholder maps, CATWOE |
+| `security-engineer` | Threat models, auth design, compliance |
+| `quality-engineer` | Quality models, metrics, tech debt tracking |
+
+## Project Types
+
+The plugin adapts generated artifacts based on project type:
+
+| Type | Modules |
+|------|---------|
+| Web Application | Core + PM + Security + Quality + DB + DevOps |
+| Mobile App | Core + PM + Security + Quality + DevOps |
+| API/Backend | Core + PM + Security + Quality + DB + DevOps |
+| Library/SDK | Core + Quality (lighter workflow) |
+| Enterprise System | All modules + compliance |
+| Academic Project | All modules (thesis/FYP ready) |
+
+## Plugin Structure
 
 ```
-sdlc-plugin/
+claude-sdlc-plugin/
 ├── .claude-plugin/
-│   └── plugin.json              # Plugin manifest
+│   ├── plugin.json          # Plugin manifest
+│   └── marketplace.json     # For global installation
 ├── skills/
-│   ├── init/
-│   │   ├── SKILL.md            # Initialization skill
-│   │   └── templates/          # Project templates
-│   ├── plan/
-│   │   ├── SKILL.md            # Planning skill
-│   │   └── templates/          # Artifact templates
-│   └── update/
-│       └── SKILL.md            # Update skill
-├── agents/
-│   ├── domain-analyst.md
-│   ├── solution-architect.md
-│   ├── ux-prototyper.md
-│   ├── project-manager.md
-│   ├── business-analyst.md
-│   ├── security-engineer.md
-│   └── quality-engineer.md
-├── hooks/
-│   └── hooks.json              # Hook configuration
-├── scripts/
-│   ├── format.sh               # Auto-formatting
-│   ├── validate-openapi.sh     # OpenAPI validation
-│   └── helpers/
-│       └── check-pnpm.sh       # pnpm detection
-├── README.md
-├── CHANGELOG.md
-├── LICENSE
-└── .gitignore
-```
-
-### Generated Project Directory
-
-```
-my-project/
-├── pnpm-workspace.yaml         # Monorepo configuration
-├── docs/                       # Source artifacts
-│   ├── pm/                     # Project Management
-│   ├── ba/                     # Business Analysis
-│   ├── req/                    # Requirements
-│   ├── arch/                   # Architecture
-│   ├── security/               # Security
-│   ├── quality/                # Quality
-│   ├── test/                   # Testing
-│   ├── ux/                     # UX & Design
-│   ├── db/                     # Database
-│   └── ops/                    # DevOps
-├── packages/
-│   ├── planning-hub/           # Storybook site
-│   │   ├── .storybook/
-│   │   ├── src/
-│   │   │   ├── docs/           # MDX pages
-│   │   │   ├── components/     # MermaidDiagram, SwaggerViewer
-│   │   │   └── utils/
-│   │   └── scripts/
-│   │       └── sync-artifacts.js
-│   └── ui/                     # Design system
-│       └── src/
-│           ├── tokens/         # Design tokens
-│           └── primitives/     # Button, Input, etc.
-└── package.json
+│   ├── init/SKILL.md        # /sdlc:init
+│   ├── plan/SKILL.md        # /sdlc:plan
+│   └── update/SKILL.md      # /sdlc:update
+├── agents/                   # Specialized subagents
+├── hooks/                    # Auto-formatting, validation
+└── scripts/                  # Helper scripts
 ```
 
 ## Configuration
 
 ### Customizing Templates
 
-Templates are located in `skills/init/templates/` and `skills/plan/templates/`.
+Templates are in `skills/*/templates/`. Edit to customize generated artifacts.
 
-To customize:
-1. Edit template files (use `{{VARIABLE}}` for placeholders)
-2. Modify skill logic in `skills/*/SKILL.md` if needed
+### Hooks
 
-### Overriding Hooks
+Hooks in `hooks/hooks.json` provide:
+- **Auto-formatting** - Prettier on file save
+- **OpenAPI validation** - Block invalid specs
+- **pnpm check** - Verify prerequisites
 
-Edit `hooks/hooks.json` to:
-- Disable hooks (remove entries)
-- Change hook matchers
-- Modify hook commands
-- Add new hooks
-
-### Extending Skills
-
-Skills are defined in `skills/*/SKILL.md` with YAML frontmatter.
-
-Skill frontmatter structure:
-```yaml
----
-name: skill-name
-description: What this skill does
-disable-model-invocation: false
-user-invocable: true
-argument-hint: [optional-arguments]
-allowed-tools: Bash, Write, Read, Glob, Grep
-model: sonnet
----
-```
+Disable by renaming `hooks.json` to `hooks.json.disabled`.
 
 ## Troubleshooting
 
 ### pnpm not found
 
-**Error**: `command not found: pnpm`
-
-**Solution**:
 ```bash
-# Option 1: Install globally via npm
 npm install -g pnpm
-
-# Option 2: Enable corepack (Node 16.13+)
-corepack enable
-corepack prepare pnpm@latest --activate
+# or
+corepack enable && corepack prepare pnpm@latest --activate
 ```
 
 ### Storybook won't start
 
-**Error**: Storybook fails to start or shows errors
+```bash
+rm -rf node_modules && pnpm install
+pnpm storybook --no-manager-cache
+```
 
-**Solutions**:
-1. Clear cache: `pnpm run storybook --no-manager-cache`
-2. Reinstall dependencies: `rm -rf node_modules && pnpm install`
-3. Check Node version: `node --version` (requires 18+)
-4. Check for port conflicts: `lsof -i :6006` (macOS/Linux) or `netstat -ano | findstr :6006` (Windows)
+### Plugin not loading
 
-### Artifacts not syncing
-
-**Error**: Changes in `docs/` don't appear in Storybook
-
-**Solutions**:
-1. Check sync script is running: Look for "Watching docs directory..." message
-2. Restart Storybook: `pnpm dev:storybook`
-3. Manual sync: `pnpm run sync:artifacts`
-4. Check file permissions on `docs/` and `packages/planning-hub/public/artifacts/`
-
-### OpenAPI validation failures
-
-**Error**: `OpenAPI validation failed`
-
-**Solutions**:
-1. Check OpenAPI syntax: https://editor.swagger.io
-2. Ensure `openapi: 3.0.0` or `openapi: 3.1.0` at top of file
-3. Validate required fields:
-   - `info.title` and `info.version` are required
-   - All paths must have operation objects
-   - Schema references must use `$ref` correctly
-4. Bypass validation (not recommended): Comment out PreToolUse hook in `hooks/hooks.json`
-
-### Hook errors
-
-**Error**: Hooks failing or blocking operations
-
-**Debug Steps**:
-1. Check hook script permissions: `ls -l scripts/*.sh`
-2. Test hook manually: `bash scripts/format.sh < test-input.json`
-3. View hook logs in Claude Code output
-4. Temporarily disable hooks: Remove from `hooks/hooks.json`
-
-## Best Practices
-
-### Planning Workflow
-
-1. **Start with `/sdlc:init`** - Set up project structure first
-2. **Run `/sdlc:plan` early** - Discover requirements before coding
-3. **Iterate** - Use planning hub to refine understanding
-4. **Review with stakeholders** - Share Storybook site for feedback
-5. **Keep artifacts updated** - Run `/sdlc:update` after major implementations
-
-### Artifact Organization
-
-1. **Keep docs/ clean** - Source of truth for all artifacts
-2. **Use consistent naming** - Follow established patterns
-3. **Link artifacts** - Reference related documents
-4. **Version control** - Commit artifact changes to git
-5. **Traceability** - Maintain RTM (Requirements Traceability Matrix)
-
-### Collaboration
-
-1. **Deploy planning hub** - `pnpm build:storybook` creates static site
-2. **Share with team** - Deploy to Vercel, Netlify, or GitHub Pages
-3. **Review in Storybook** - Visual review process
-4. **Use design system** - Consistent UI from planning to implementation
+1. Check path in settings.json uses forward slashes or escaped backslashes
+2. Verify marketplace.json exists at the configured URL
+3. Restart Claude Code after settings changes
 
 ## Contributing
 
@@ -549,22 +206,17 @@ Contributions welcome! Please:
 
 1. Fork the repository
 2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+3. Make changes and test
+4. Submit a pull request
 
 ## License
 
-MIT License - see LICENSE file for details
+MIT License - see [LICENSE](LICENSE) for details.
 
 ## Credits
 
-Created for University of Newcastle (UON) Computer Science curriculum alignment.
-
-Designed to bridge the gap between academic projects and industry-standard SDLC practices.
+Created to bridge academic projects and industry SDLC practices.
 
 ---
 
-**Plugin Version**: 1.0.0
-**Claude Code Version**: Latest
-**Last Updated**: 2026-01-25
+**Version**: 1.0.0 | **Claude Code**: v2.1+ | **Updated**: 2025-01

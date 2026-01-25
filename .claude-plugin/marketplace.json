@@ -1,0 +1,14 @@
+{
+  "name": "sdlc-local",
+  "description": "Local SDLC plugin marketplace",
+  "owner": {
+    "name": "SDLC Team"
+  },
+  "plugins": [
+    {
+      "name": "sdlc",
+      "description": "SDLC workflow automation with Storybook-powered planning hub",
+      "source": "./"
+    }
+  ]
+}

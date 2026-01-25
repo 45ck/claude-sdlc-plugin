@@ -1,11 +1,8 @@
 ---
-name: sdlc:plan
+name: plan
 description: Iterative planning wizard with client validation at each stage. Generates SDLC artifacts in proper dependency order (scenarios → workflows → models → data → API → design).
-disable-model-invocation: false
 user-invocable: true
-argument-hint:
 allowed-tools: Write, Read, Bash, Glob, Grep, AskUserQuestion, Task
-model: sonnet
 ---
 
 # /sdlc:plan - Iterative Planning with Client Validation

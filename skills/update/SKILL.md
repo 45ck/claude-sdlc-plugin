@@ -1,11 +1,8 @@
 ---
-name: sdlc:update
+name: update
 description: Synchronize planning artifacts with implementation status. Updates progress tracking, marks completed items in RTM, and generates progress reports. Use after completing implementation work.
-disable-model-invocation: false
 user-invocable: true
-argument-hint:
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep
-model: sonnet
 ---
 
 # /sdlc:update - Sync Artifacts with Implementation

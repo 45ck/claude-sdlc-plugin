@@ -1,11 +1,9 @@
 ---
-name: sdlc:init
+name: init
 description: Initialize a new SDLC monorepo with Storybook planning hub, pnpm workspace, and git configuration. Use when starting a new project.
-disable-model-invocation: false
 user-invocable: true
 argument-hint: [project-name]
 allowed-tools: Bash, Write, Read, Glob, Grep
-model: sonnet
 ---
 
 # /sdlc:init - Initialize SDLC Monorepo
