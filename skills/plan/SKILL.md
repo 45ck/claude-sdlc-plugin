@@ -84,6 +84,43 @@ Use your judgment. You may:
 
 ## Planning Flow
 
+### Pre-Planning: Storybook Setup
+
+**Goal:** Ensure the Storybook Planning Hub is running so users can visually review artifacts as they're generated.
+
+**Before starting any planning stages:**
+
+1. **Check if Storybook is running:**
+   ```bash
+   curl -s -o /dev/null -w "%{http_code}" http://localhost:6006 2>/dev/null || echo "not running"
+   ```
+
+2. **If NOT running, start it:**
+   ```bash
+   cd packages/planning-hub && pnpm run dev &
+   ```
+   Wait for Storybook to be ready (check http://localhost:6006 responds).
+
+3. **Inform the user:**
+   ```markdown
+   📖 **Storybook Planning Hub is running**
+
+   Open http://localhost:6006 in a separate browser window.
+
+   As I generate artifacts, I'll tell you exactly where to find them in Storybook.
+   Keep both windows visible for the best planning experience:
+   - **Window 1:** Claude Code (this terminal)
+   - **Window 2:** Storybook Planning Hub (http://localhost:6006)
+   ```
+
+4. **Before each checkpoint, sync artifacts:**
+   ```bash
+   cd packages/planning-hub && pnpm run sync:artifacts
+   ```
+   This ensures all generated docs are available in Storybook.
+
+---
+
 ### Stage 0: Kickoff and Constraints
 
 **Goal:** Align on "what are we doing and what are the limits?"
@@ -194,7 +231,24 @@ Based on answers, determine which SDLC modules to generate:
 **Exceptions:** [What could go wrong]
 ```
 
-**Checkpoint:** "Here are the user scenarios. Review them in Storybook → UX & Design → Scenarios. Do these match how you expect the system to work?"
+**Checkpoint:**
+
+Before presenting, sync artifacts:
+```bash
+cd packages/planning-hub && pnpm run sync:artifacts
+```
+
+Then present:
+```markdown
+✓ User scenarios and personas created
+
+📖 **Review in Storybook:**
+   Navigate to: **UX & Design → Scenarios**
+   Direct URL: http://localhost:6006/?path=/docs/ux-design-scenarios--docs
+
+Do these scenarios match how you expect the system to work?
+Any personas missing or incorrectly characterized?
+```
 
 ---
 
@@ -250,7 +304,24 @@ flowchart TD
     G --> H[End]
 ```
 
-**Checkpoint:** "Here are the use cases and activity diagrams. Review in Storybook → Requirements → Use Cases. Do the workflows accurately represent what needs to happen?"
+**Checkpoint:**
+
+Before presenting, sync artifacts:
+```bash
+cd packages/planning-hub && pnpm run sync:artifacts
+```
+
+Then present:
+```markdown
+✓ Use cases and activity diagrams created
+
+📖 **Review in Storybook:**
+   Navigate to: **Requirements → Use Cases**
+   Direct URL: http://localhost:6006/?path=/docs/requirements-use-cases--docs
+
+Do the workflows accurately represent what needs to happen?
+Any use cases missing or incorrectly described?
+```
 
 ---
 
@@ -281,7 +352,24 @@ flowchart TD
 - Technical stakeholders: Show class + sequence diagrams
 - Business stakeholders: Translate back to scenarios, show entity descriptions in plain language
 
-**Checkpoint:** "Here's the domain model based on our confirmed workflows. Review in Storybook → Architecture → Domain Model. Do these entities and relationships look correct?"
+**Checkpoint:**
+
+Before presenting, sync artifacts:
+```bash
+cd packages/planning-hub && pnpm run sync:artifacts
+```
+
+Then present:
+```markdown
+✓ Domain model (class diagrams + sequence diagrams) created
+
+📖 **Review in Storybook:**
+   Navigate to: **Architecture → Domain Model**
+   Direct URL: http://localhost:6006/?path=/docs/architecture-domain-model--docs
+
+Do these entities and relationships look correct?
+Any domain concepts missing or incorrectly modeled?
+```
 
 ---
 
@@ -326,7 +414,24 @@ erDiagram
 - Indexing recommendations
 - Data volume estimates
 
-**Checkpoint:** "Here's the data model. Review in Storybook → Architecture → Data Model. Does this structure support all the workflows we've validated?"
+**Checkpoint:**
+
+Before presenting, sync artifacts:
+```bash
+cd packages/planning-hub && pnpm run sync:artifacts
+```
+
+Then present:
+```markdown
+✓ Data model (ERD + table definitions) created
+
+📖 **Review in Storybook:**
+   Navigate to: **Architecture → Data Model**
+   Direct URL: http://localhost:6006/?path=/docs/architecture-data-model--docs
+
+Does this structure support all the workflows we've validated?
+Any tables or relationships that seem incorrect?
+```
 
 ---
 
@@ -349,7 +454,27 @@ erDiagram
 - Technical stakeholders: Full OpenAPI spec, Swagger UI
 - Business stakeholders: "Capabilities" view - what the API can do, example requests/responses
 
-**Checkpoint:** "Here's the API specification. Review in Storybook → Architecture → API Specification (interactive Swagger UI). Do the endpoints cover all required functionality?"
+**Checkpoint:**
+
+Before presenting, sync artifacts:
+```bash
+cd packages/planning-hub && pnpm run sync:artifacts
+```
+
+Then present:
+```markdown
+✓ API specification (OpenAPI) created
+
+📖 **Review in Storybook:**
+   Navigate to: **Architecture → API Specification**
+   Direct URL: http://localhost:6006/?path=/docs/architecture-api-specification--docs
+
+   💡 The API is rendered with interactive Swagger UI - you can explore
+   endpoints, see request/response schemas, and try example requests.
+
+Do the endpoints cover all required functionality?
+Any missing operations or incorrect data structures?
+```
 
 ---
 
@@ -384,7 +509,27 @@ erDiagram
 - Design system ensures consistency
 - Components are reusable for implementation
 
-**Checkpoint:** "Here are the interactive prototypes. Review in Storybook → UX & Design → Prototypes. Click through the flows - does this match your expectations?"
+**Checkpoint:**
+
+Before presenting, sync artifacts:
+```bash
+cd packages/planning-hub && pnpm run sync:artifacts
+```
+
+Then present:
+```markdown
+✓ Interactive prototypes created
+
+📖 **Review in Storybook:**
+   Navigate to: **UX & Design → Prototypes**
+   Direct URL: http://localhost:6006/?path=/docs/ux-design-prototypes--docs
+
+   💡 These are interactive components - click through the flows,
+   try different states (hover, focus, error), and test the user journey.
+
+Does this match your expectations for the user experience?
+Any interactions that feel wrong or missing?
+```
 
 ---
 
@@ -427,7 +572,33 @@ Invoke `business-analyst`:
 - Test strategy
 - Test plan aligned with requirements
 
-**Checkpoint:** "I've generated the supporting artifacts. Review the Security, Quality, and PM sections in Storybook. Any concerns?"
+**Checkpoint:**
+
+Before presenting, sync artifacts:
+```bash
+cd packages/planning-hub && pnpm run sync:artifacts
+```
+
+Then present:
+```markdown
+✓ Supporting artifacts created (Security, Quality, PM as applicable)
+
+📖 **Review in Storybook:**
+
+   **Security artifacts** (if generated):
+   Navigate to: **Security → Threat Model**
+   Direct URL: http://localhost:6006/?path=/docs/security-threat-model--docs
+
+   **Quality artifacts** (if generated):
+   Navigate to: **Quality → Quality Model**
+   Direct URL: http://localhost:6006/?path=/docs/quality-quality-model--docs
+
+   **Project Management artifacts** (if generated):
+   Navigate to: **Project Management → Overview**
+   Direct URL: http://localhost:6006/?path=/docs/project-management-overview--docs
+
+Any concerns about the security approach, quality targets, or project plan?
+```
 
 ---
 
@@ -461,15 +632,20 @@ Invoke `business-analyst`:
 - [ ] Ready to proceed to implementation
 
 ### Next Steps
-1. Review all artifacts in Storybook
-2. Complete sign-off checklist
-3. Begin implementation with [recommended first task]
-4. Use `/sdlc:update` after implementing features
+1. Complete sign-off checklist above
+2. Begin implementation with [recommended first task]
+3. Use `/sdlc:update` after implementing features
 
-### View Planning Hub
-\`\`\`bash
-pnpm dev:storybook
-\`\`\`
+### 📖 Complete Planning Hub
+All artifacts are available in Storybook at http://localhost:6006
+
+Quick links to review:
+- **UX & Design → Scenarios**: User stories and personas
+- **Requirements → Use Cases**: Functional requirements
+- **Architecture → Domain Model**: Class and sequence diagrams
+- **Architecture → Data Model**: ERD and table definitions
+- **Architecture → API Specification**: Interactive Swagger UI
+- **UX & Design → Prototypes**: Clickable component demos
 ```
 
 ---
