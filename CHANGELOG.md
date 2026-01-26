@@ -5,24 +5,12 @@ All notable changes to the SDLC Plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-### Planned Features
-- Phase 1: Plugin Foundation
-- Phase 2: Template Files
-- Phase 3: Skills Implementation
-- Phase 4: Subagents Implementation
-- Phase 5: Hooks and Scripts
-- Phase 6: Storybook Planning Hub
-- Phase 7: Design System Package
-- Phase 8: Testing and Validation
-- Phase 9: Documentation
-
-## [1.0.0] - TBD
+## [1.0.0] - 2026-01-26
 
 ### Added
 - `/sdlc:init` skill for monorepo scaffolding with Storybook planning hub
 - `/sdlc:plan` skill for interactive planning workflows with intelligent module inference
+- `/sdlc:implement` skill for TDD implementation from validated planning artifacts
 - `/sdlc:update` skill for progress tracking and artifact synchronization
 - **domain-analyst** subagent for business requirements and user stories
 - **solution-architect** subagent for technical architecture (uses Opus model)
@@ -71,5 +59,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Static site generation for Storybook
 - Cross-platform script compatibility (Windows, macOS, Linux)
 
-[Unreleased]: https://github.com/anthropics/claude-code-sdlc-plugin/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/anthropics/claude-code-sdlc-plugin/releases/tag/v1.0.0
+[1.0.0]: https://github.com/45ck/claude-sdlc-plugin/releases/tag/v1.0.0

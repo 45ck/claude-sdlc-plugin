@@ -8,12 +8,13 @@ A Claude Code plugin that automates software development lifecycle (SDLC) workfl
 
 The SDLC plugin scaffolds complete software projects with proper documentation, then guides you through an iterative planning process that validates each stage with you before proceeding.
 
-### Three Commands
+### Four Commands
 
 | Command | Description |
 |---------|-------------|
 | `/sdlc:init` | Scaffold a monorepo with Storybook planning hub, design system, and quality tooling |
 | `/sdlc:plan` | Interactive planning wizard - generates artifacts in dependency order with validation |
+| `/sdlc:implement` | TDD implementation from validated planning artifacts with quality gates |
 | `/sdlc:update` | Sync artifacts with implementation progress from git history |
 
 ### What Gets Generated
@@ -156,6 +157,7 @@ claude-sdlc-plugin/
 ├── skills/
 │   ├── init/SKILL.md        # /sdlc:init
 │   ├── plan/SKILL.md        # /sdlc:plan
+│   ├── implement/SKILL.md   # /sdlc:implement
 │   └── update/SKILL.md      # /sdlc:update
 ├── agents/                   # Specialized subagents
 ├── hooks/                    # Auto-formatting, validation
@@ -219,4 +221,4 @@ Created to bridge academic projects and industry SDLC practices.
 
 ---
 
-**Version**: 1.0.0 | **Claude Code**: v2.1+ | **Updated**: 2025-01
+**Version**: 1.0.0 | **Claude Code**: v2.1+ | **Updated**: 2026-01
