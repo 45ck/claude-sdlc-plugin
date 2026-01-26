@@ -6,6 +6,7 @@ model: opus
 permissionMode: default
 skills:
   - sdlc:plan
+  - sdlc:review
 hooks:
   PostToolUse:
     - matcher: "Write|Edit"

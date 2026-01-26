@@ -310,6 +310,13 @@ Create a progress report in docs/progress-report.md:
 
 [List completed user stories/features]
 
+## Verification Status
+
+- **Design Review**: {status from sdlc.state.json review checkpoint, or "Not yet run"}
+- **QA Check**: {status from sdlc.state.json qa checkpoint, or "Not yet run"}
+
+Run `/sdlc:review` and `/sdlc:qa` for detailed verification.
+
 ## Upcoming Work
 
 ### In Progress

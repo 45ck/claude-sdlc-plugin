@@ -8,7 +8,7 @@ A Claude Code plugin that automates software development lifecycle (SDLC) workfl
 
 The SDLC plugin scaffolds complete software projects with proper documentation, then guides you through an iterative planning process that validates each stage with you before proceeding.
 
-### Four Commands
+### Commands
 
 | Command | Description |
 |---------|-------------|
@@ -16,6 +16,8 @@ The SDLC plugin scaffolds complete software projects with proper documentation, 
 | `/sdlc:plan` | Interactive planning wizard - generates artifacts in dependency order with validation |
 | `/sdlc:implement` | TDD implementation from validated planning artifacts with quality gates |
 | `/sdlc:update` | Sync artifacts with implementation progress from git history |
+| `/sdlc:review` | Verify implementation matches planning artifacts (API spec, ERD, domain model, acceptance criteria) |
+| `/sdlc:qa` | Quality assurance - test coverage, test quality, E2E gaps, security scanning |
 
 ### What Gets Generated
 
@@ -112,13 +114,37 @@ The wizard walks you through:
 
 Each stage is validated with you before proceeding.
 
-### 4. Track Implementation
+### 4. Implement Your Feature
+
+```bash
+/sdlc:implement
+```
+
+TDD implementation driven by your validated planning artifacts. Generates code with quality gates: tests first, then implementation, then verification against acceptance criteria.
+
+### 5. Track Implementation
 
 ```bash
 /sdlc:update
 ```
 
 Scans git commits and updates artifact status.
+
+### 6. Verify Design Conformance
+
+```bash
+/sdlc:review
+```
+
+Checks that code matches planning artifacts: API routes vs OpenAPI spec, database schema vs ERD, TypeScript classes vs domain model, and acceptance criteria traceability.
+
+### 7. Quality Assurance
+
+```bash
+/sdlc:qa
+```
+
+Runs quality checks: test coverage against thresholds, test quality assessment, E2E/integration gap analysis, security dependency audit, and static analysis. Generates a quality score (0-100) with fix-forward options.
 
 ## Specialized Agents
 
@@ -133,6 +159,7 @@ The plugin includes expert subagents for different SDLC disciplines:
 | `business-analyst` | Process models, stakeholder maps, CATWOE |
 | `security-engineer` | Threat models, auth design, compliance |
 | `quality-engineer` | Quality models, metrics, tech debt tracking |
+| `review-auditor` | Cross-artifact conformance checking (read-only) |
 
 ## Project Types
 
@@ -158,7 +185,9 @@ claude-sdlc-plugin/
 │   ├── init/SKILL.md        # /sdlc:init
 │   ├── plan/SKILL.md        # /sdlc:plan
 │   ├── implement/SKILL.md   # /sdlc:implement
-│   └── update/SKILL.md      # /sdlc:update
+│   ├── update/SKILL.md      # /sdlc:update
+│   ├── review/SKILL.md      # /sdlc:review
+│   └── qa/SKILL.md          # /sdlc:qa
 ├── agents/                   # Specialized subagents
 ├── hooks/                    # Auto-formatting, validation
 └── scripts/                  # Helper scripts
@@ -221,4 +250,4 @@ Created to bridge academic projects and industry SDLC practices.
 
 ---
 
-**Version**: 1.0.0 | **Claude Code**: v2.1+ | **Updated**: 2026-01
+**Version**: 1.1.0 | **Claude Code**: v2.1+ | **Updated**: 2026-01

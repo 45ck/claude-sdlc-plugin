@@ -6,6 +6,7 @@ model: sonnet
 permissionMode: default
 skills:
   - sdlc:plan
+  - sdlc:qa
 ---
 
 # Quality Engineer Agent

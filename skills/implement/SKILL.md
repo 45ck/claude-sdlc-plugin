@@ -378,6 +378,15 @@ When the user runs `/sdlc:implement`:
 
 ---
 
+## Next Steps After Implementation
+
+After completing features:
+1. Run `/sdlc:update` to sync progress with planning artifacts
+2. Run `/sdlc:review` to verify implementation matches design (API spec, ERD, domain model)
+3. Run `/sdlc:qa` to check quality thresholds (coverage, test quality, security)
+
+---
+
 ## Success Criteria
 
 Implementation is progressing correctly when:

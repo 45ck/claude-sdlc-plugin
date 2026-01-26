@@ -5,6 +5,24 @@ All notable changes to the SDLC Plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-01-26
+
+### Added
+- `/sdlc:review` skill for design verification against planning artifacts (API spec, ERD, domain model, acceptance criteria)
+- `/sdlc:qa` skill for quality assurance verification with coverage thresholds, test quality assessment, and quality scoring
+- **review-auditor** subagent for cross-artifact conformance checking (read-only, uses Opus model)
+- Fix-forward mode in `/sdlc:qa` for generating test stubs and E2E scaffolds
+- Coverage trend tracking in `docs/qa/coverage-trend.csv`
+- Deviations log in `docs/review/deviations-log.md`
+
+### Changed
+- Updated `quality-engineer` agent with `/sdlc:qa` skill
+- Updated `security-engineer` agent with `/sdlc:qa` and `/sdlc:review` skills
+- Updated `solution-architect` agent with `/sdlc:review` skill
+- Updated `domain-analyst` agent with `/sdlc:review` skill
+- Added "Next Steps" guidance to `/sdlc:implement` skill
+- Added verification status block to `/sdlc:update` progress report
+
 ## [1.0.0] - 2026-01-26
 
 ### Added
@@ -59,4 +77,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Static site generation for Storybook
 - Cross-platform script compatibility (Windows, macOS, Linux)
 
+[1.1.0]: https://github.com/45ck/claude-sdlc-plugin/releases/tag/v1.1.0
 [1.0.0]: https://github.com/45ck/claude-sdlc-plugin/releases/tag/v1.0.0

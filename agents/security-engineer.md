@@ -6,6 +6,8 @@ model: sonnet
 permissionMode: default
 skills:
   - sdlc:plan
+  - sdlc:qa
+  - sdlc:review
 ---
 
 # Security Engineer Agent
