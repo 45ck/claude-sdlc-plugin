@@ -5,6 +5,24 @@ All notable changes to the SDLC Plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-02-07
+
+### Added
+- `/sdlc:refs` skill for syncing/searching local reference repos (curated `awesome-*` lists)
+- Curated awesome seed list + sync script (plugin-level and `/sdlc:init` scaffolding templates)
+- Planning + agent guidance to use local references as a tech discovery/index layer
+- `AGENTS.md` scaffolding template for generated projects (agent teams / working agreements)
+- Team mode guidance in `/sdlc:plan` (AskUserQuestion: Solo vs Team; parallel subagents + synthesis)
+
+### Fixed / Improved
+- `/sdlc:plan` flow now explicitly requires choosing Solo vs Team before proceeding
+- Awesome refs sync now writes `references/awesome/LOCK.json` for auditability/reproducibility
+- Catalog search: domain penalties/filters + fallback when SQLite FTS5 is unavailable
+- Added `scripts/smoke.sh` to prevent script/template regressions
+
+### Changed
+- Updated `solution-architect`, `security-engineer`, and `quality-engineer` agents to use local awesome references when available
+
 ## [1.1.0] - 2026-01-26
 
 ### Added
@@ -79,3 +97,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [1.1.0]: https://github.com/45ck/claude-sdlc-plugin/releases/tag/v1.1.0
 [1.0.0]: https://github.com/45ck/claude-sdlc-plugin/releases/tag/v1.0.0
+[1.1.1]: https://github.com/45ck/claude-sdlc-plugin/releases/tag/v1.1.1

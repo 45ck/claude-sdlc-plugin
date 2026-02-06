@@ -1,7 +1,7 @@
 {
   "name": "sdlc",
   "description": "SDLC workflow automation with Storybook-powered planning hub covering full software development lifecycle",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "author": {
     "name": "SDLC Team"
   }

@@ -49,3 +49,8 @@ test-results/
 
 # Storybook
 storybook-static/
+
+# Local reference repos (curated awesome-* lists, etc.)
+references/awesome/repos/
+references/awesome/catalog.sqlite
+references/awesome/LOCK.json

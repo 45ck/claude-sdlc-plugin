@@ -18,6 +18,7 @@ The SDLC plugin scaffolds complete software projects with proper documentation, 
 | `/sdlc:update` | Sync artifacts with implementation progress from git history |
 | `/sdlc:review` | Verify implementation matches planning artifacts (API spec, ERD, domain model, acceptance criteria) |
 | `/sdlc:qa` | Quality assurance - test coverage, test quality, E2E gaps, security scanning |
+| `/sdlc:refs` | Sync/search local reference repos (curated awesome-* lists) for planning support |
 
 ### What Gets Generated
 
@@ -114,6 +115,20 @@ The wizard walks you through:
 
 Each stage is validated with you before proceeding.
 
+### Team Mode (Optional)
+
+`/sdlc:plan` can run in **Solo** mode (single agent) or **Team** mode (parallel specialist subagents + synthesis). The skill will ask which you want at the start.
+
+Typical Team mode workflow:
+
+```bash
+# (optional) keep local references current
+/sdlc:refs
+
+# plan with parallel subagents + synthesis
+/sdlc:plan
+```
+
 ### 4. Implement Your Feature
 
 ```bash
@@ -187,7 +202,8 @@ claude-sdlc-plugin/
 │   ├── implement/SKILL.md   # /sdlc:implement
 │   ├── update/SKILL.md      # /sdlc:update
 │   ├── review/SKILL.md      # /sdlc:review
-│   └── qa/SKILL.md          # /sdlc:qa
+│   ├── qa/SKILL.md          # /sdlc:qa
+│   └── refs/SKILL.md        # /sdlc:refs
 ├── agents/                   # Specialized subagents
 ├── hooks/                    # Auto-formatting, validation
 └── scripts/                  # Helper scripts
@@ -250,4 +266,4 @@ Created to bridge academic projects and industry SDLC practices.
 
 ---
 
-**Version**: 1.1.0 | **Claude Code**: v2.1+ | **Updated**: 2026-01
+**Version**: 1.1.1 | **Claude Code**: v2.1+ | **Updated**: 2026-02

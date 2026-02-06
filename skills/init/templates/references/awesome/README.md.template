@@ -1,0 +1,24 @@
+# Awesome References (Optional)
+
+This folder is a local cache of curated `awesome-*` GitHub repositories. It exists to make technology discovery and best-practice lookup fast and searchable during planning.
+
+## Layout
+
+- `seeds.tsv`: curated seed list (what gets synced)
+- `repos/`: local clones (ignored by git)
+
+## Sync / Update
+
+```bash
+./references/awesome/sync.sh
+```
+
+Reproducibility:
+- `./references/awesome/sync.sh` also writes `references/awesome/LOCK.json` (commit SHAs per repo).
+
+## Search
+
+```bash
+rg -n "observability" references/awesome/repos
+rg -n "threat model" references/awesome/repos
+```

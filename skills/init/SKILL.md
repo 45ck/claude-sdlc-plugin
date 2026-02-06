@@ -87,6 +87,12 @@ Create the following directory structure:
 │       │   ├── tokens/
 │       │   └── primitives/
 │       └── package.json
+├── references/                      # Optional local reference repos (awesome lists, etc.)
+│   └── awesome/
+│       ├── README.md
+│       ├── seeds.tsv
+│       ├── sync.sh
+│       └── repos/                  # Local clones (gitignored)
 ├── pnpm-workspace.yaml
 ├── package.json
 └── .gitignore
@@ -131,6 +137,20 @@ Use Read tool to read templates from `${CLAUDE_PLUGIN_ROOT}/skills/init/template
 1. `pnpm-workspace.yaml` (from pnpm-workspace.yaml.template)
 2. `package.json` (from package.json.template)
 3. `.gitignore` (from .gitignore.template)
+4. `AGENTS.md` (from AGENTS.md.template)
+
+**Optional (recommended): Local reference repos (awesome lists)**
+
+Create:
+- `references/awesome/README.md` (from references/awesome/README.md.template)
+- `references/awesome/seeds.tsv` (from references/awesome/seeds.tsv.template)
+- `references/awesome/sync.sh` (from references/awesome/sync.sh.template)
+
+Then make the sync script executable:
+
+```bash
+chmod +x references/awesome/sync.sh
+```
 
 ### 4.5. Set Up Quality Gates
 

@@ -30,3 +30,12 @@ coverage/
 # Temporary
 *.tmp
 .temp/
+
+# Python
+__pycache__/
+*.pyc
+
+# Local reference repos (curated "awesome-*" lists, etc.)
+references/awesome/repos/
+references/awesome/catalog.sqlite
+references/awesome/LOCK.json

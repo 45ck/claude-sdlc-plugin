@@ -1,0 +1,47 @@
+# AGENTS.md (Project)
+
+This project was scaffolded with the Claude SDLC Plugin.
+
+## Recommended Agent Team
+
+Use these roles in parallel when planning/implementing:
+
+- `domain-analyst`: requirements, acceptance criteria, traceability
+- `solution-architect`: system design, OpenAPI, ADRs
+- `security-engineer`: threat model, authz/authn, security testing
+- `quality-engineer`: quality gates, testing strategy, refactoring plans
+
+## Suggested Workflow
+
+1. Plan:
+   - Run `/sdlc:plan`
+   - Validate each checkpoint before moving on
+2. Implement:
+   - Run `/sdlc:implement` (TDD-first)
+3. Sync progress:
+   - Run `/sdlc:update`
+4. Conformance:
+   - Run `/sdlc:review`
+5. QA:
+   - Run `/sdlc:qa`
+
+## Optional: Local Reference Repos (Awesome Lists)
+
+If you want deterministic, offline tech discovery during planning, keep a local cache of curated `awesome-*` lists:
+
+- `references/awesome/seeds.tsv` (seed list)
+- `references/awesome/sync.sh` (sync/update local clones into `references/awesome/repos/`)
+
+Sync:
+
+```bash
+chmod +x references/awesome/sync.sh
+./references/awesome/sync.sh
+```
+
+Search:
+
+```bash
+rg -n "observability" references/awesome/repos
+```
+
