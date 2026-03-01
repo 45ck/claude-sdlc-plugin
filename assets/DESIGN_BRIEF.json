@@ -1,0 +1,24 @@
+{
+  "repo_name": "claude-sdlc-plugin",
+  "tagline": "AI-powered SDLC workflows for Claude Code",
+  "one_sentence_purpose": "A Claude Code plugin that automates software development lifecycle workflows with an interactive Storybook-based planning hub",
+  "target_users": "Software engineers and teams using Claude Code who want structured project planning and SDLC automation",
+  "keywords": ["SDLC", "Claude Code", "plugin", "planning", "automation"],
+  "visual_metaphors": ["layered document stack flowing through a pipeline conveyor", "interconnected nodes forming an SDLC cycle diagram", "blueprint grid with artifact cards being assembled"],
+  "avoid": ["no mascots", "no photorealism", "no overly complex illustrations", "no generic AI brain imagery"],
+  "style_adjectives": ["structured", "professional", "clean", "systematic", "modern"],
+  "palette_hint": {
+    "bg_light": "#ffffff",
+    "bg_dark": "#0d1117",
+    "primary": "#7c3aed",
+    "accent": "#06b6d4",
+    "ink": "#c9d1d9"
+  },
+  "assets_needed": [
+    {"path": "assets/banner.light.png", "type": "readme_banner", "desc": "Wide banner on white background showing SDLC lifecycle flow with document artifacts and pipeline stages"},
+    {"path": "assets/banner.dark.png", "type": "readme_banner", "desc": "Wide banner on dark background (#0d1117) showing SDLC lifecycle flow with document artifacts and pipeline stages"},
+    {"path": "assets/logo.light.png", "type": "square_logo", "desc": "Square logo on white background with stylized SDLC cycle mark"},
+    {"path": "assets/logo.dark.png", "type": "square_logo", "desc": "Square logo on dark background with stylized SDLC cycle mark"},
+    {"path": "assets/social-preview.png", "type": "github_social_preview", "desc": "GitHub social preview card with project name, tagline, and SDLC visual motif"}
+  ]
+}

@@ -1,5 +1,11 @@
 # Claude SDLC Plugin
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/banner.dark.png" />
+  <source media="(prefers-color-scheme: light)" srcset="assets/banner.light.png" />
+  <img src="assets/banner.light.png" alt="claude-sdlc-plugin banner" width="100%" />
+</picture>
+
 A Claude Code plugin that automates software development lifecycle (SDLC) workflows with an interactive Storybook-based planning hub.
 
 **Generate professional SDLC artifacts with AI-assisted iterative planning.**
